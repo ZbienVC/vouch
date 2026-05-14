@@ -55,7 +55,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Right panel */}
-      <div className="flex flex-1 items-center justify-center p-6 min-h-screen w-full">
+      <div className="flex flex-1 items-center justify-center px-4 py-8 min-h-screen w-full">
         <div className="auth-card w-full mx-auto">
           <div className="lg:hidden mb-6 text-center w-full">
             <span style={{ fontSize: 18, fontWeight: 600, color: "var(--text-primary)" }}>
@@ -75,10 +75,10 @@ export default function SignUpPage() {
             appearance={{
               variables: {
                 colorBackground: "#0D1525",
-                colorInputBackground: "#131E33",
+                colorInputBackground: "#1A2744",
                 colorInputText: "#F1F5F9",
                 colorText: "#F1F5F9",
-                colorTextSecondary: "#94A3B8",
+                colorTextSecondary: "#CBD5E1",
                 colorPrimary: "#6366F1",
                 colorDanger: "#F43F5E",
                 borderRadius: "10px",
