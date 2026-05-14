@@ -431,7 +431,7 @@ export default function HomePage() {
               Find a Referral <ArrowRight size={16} />
             </Link>
             <Link
-              href="/sign-up"
+              href="/sign-up?role=referrer"
               className="flex items-center gap-2 px-8 py-4 text-base font-semibold transition-all"
               style={{
                 backgroundColor: 'transparent',
