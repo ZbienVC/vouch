@@ -2,8 +2,10 @@
 
 import { useState, useCallback } from "react"
 import { Search, SlidersHorizontal, X } from "lucide-react"
-import { VouchCard, VouchButton, VouchInput, VouchSkeleton } from "@/components/ui/vouch"
+import { VouchCard, VouchButton, VouchInput } from "@/components/ui/vouch"
 import ReferrerCard, { type ReferrerCardData } from "@/components/referrers/ReferrerCard"
+import ReferrerCardSkeleton from "@/components/referrers/ReferrerCardSkeleton"
+import EmptyState from "@/components/ui/EmptyState"
 
 interface Filters {
   search: string
@@ -334,33 +336,16 @@ export default function BrowseReferrers({ initialListings, initialTotal }: Brows
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
-                <VouchCard key={i} className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <VouchSkeleton className="w-10 h-10 rounded-full" />
-                    <div className="flex-1 space-y-2">
-                      <VouchSkeleton className="h-4 w-28" />
-                      <VouchSkeleton className="h-3 w-20" />
-                    </div>
-                  </div>
-                  <VouchSkeleton className="h-3 w-full" />
-                  <VouchSkeleton className="h-3 w-3/4" />
-                  <VouchSkeleton className="h-8 w-full rounded-lg" />
-                </VouchCard>
+                <ReferrerCardSkeleton key={i} />
               ))}
             </div>
           ) : listings.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <Search size={48} className="text-[var(--text-secondary)] mb-4" />
-              <h3 className="font-display text-lg font-semibold text-[var(--text-primary)] mb-2">
-                No referrers match your filters
-              </h3>
-              <p className="text-[var(--text-secondary)] mb-4 max-w-sm">
-                Try adjusting your search criteria or clearing the filters.
-              </p>
-              <VouchButton variant="secondary" onClick={clearFilters}>
-                Clear Filters
-              </VouchButton>
-            </div>
+            <EmptyState
+              icon={Search}
+              title="No referrers match your filters"
+              description="Try adjusting your search criteria or clearing the filters."
+              action={{ label: "Clear Filters", onClick: clearFilters }}
+            />
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

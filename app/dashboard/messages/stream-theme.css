@@ -1,0 +1,37 @@
+.str-chat {
+  --str-chat__primary-color: #6366F1;
+  --str-chat__active-primary-color: #818CF8;
+  --str-chat__surface-color: #0F1729;
+  --str-chat__secondary-surface-color: #141E35;
+  --str-chat__tertiary-surface-color: #1A2540;
+  --str-chat__primary-surface-color: #0F1729;
+  --str-chat__primary-surface-color-low-emphasis: rgba(99, 102, 241, 0.08);
+  --str-chat__border-radius-circle: 50%;
+  --str-chat__spacing-1: 4px;
+  --str-chat__message-bubble-color: #F1F5F9;
+  --str-chat__own-message-bubble-background: rgba(99, 102, 241, 0.15);
+  --str-chat__other-message-bubble-background: #141E35;
+  --str-chat__channel-list-background-color: #0F1729;
+  --str-chat__input-background-color: #141E35;
+  --str-chat__border-color: rgba(148, 163, 184, 0.12);
+  --str-chat__text-color: #F1F5F9;
+  --str-chat__secondary-text-color: #94A3B8;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.str-chat__message-simple__meta {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.str-chat__message-simple:hover .str-chat__message-simple__meta {
+  opacity: 1;
+}
+
+.str-chat__send-button {
+  color: #6366F1;
+}
+
+.str-chat__send-button:hover {
+  color: #818CF8;
+}

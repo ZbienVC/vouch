@@ -122,13 +122,14 @@ export default function OnboardingVerifyPage() {
           resumeUrl,
         }),
       })
-      const data = (await res.json()) as { success?: boolean; error?: string }
+      const data = (await res.json()) as { success?: boolean; error?: string; userName?: string }
       if (!res.ok || !data.success) {
         toast.error(data.error ?? "Something went wrong")
         return
       }
       toast.success("Welcome to Vouch!")
-      router.push("/dashboard")
+      const nameParam = encodeURIComponent(data.userName || fullName || "there")
+      router.push(`/onboarding/success?name=${nameParam}`)
     } catch {
       toast.error("Failed to complete onboarding")
     } finally {

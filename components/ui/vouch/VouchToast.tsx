@@ -1,48 +1,59 @@
-﻿import { toast as sonnerToast, Toaster } from "sonner"
+import { toast as sonnerToast, Toaster } from "sonner"
+import { CheckCircle2, XCircle, Info, AlertTriangle } from "lucide-react"
 
 export const toast = {
-  success: (message: string, options?: Parameters<typeof sonnerToast.success>[1]) =>
+  success: (message: string, action?: { label: string; onClick: () => void }) =>
     sonnerToast.success(message, {
+      icon: <CheckCircle2 size={16} style={{ color: "var(--success)" }} />,
+      action: action ? { label: action.label, onClick: action.onClick } : undefined,
       style: {
-        background: "#1A1A24",
-        border: "1px solid #2A2A38",
-        color: "#F0F0FF",
+        background: "var(--surface-raised)",
+        border: "1px solid var(--success)",
+        color: "var(--text-primary)",
+        borderLeft: "3px solid var(--success)",
+        fontFamily: "'DM Sans', sans-serif",
       },
-      ...options,
     }),
-  error: (message: string, options?: Parameters<typeof sonnerToast.error>[1]) =>
+  error: (message: string) =>
     sonnerToast.error(message, {
+      icon: <XCircle size={16} style={{ color: "var(--error)" }} />,
       style: {
-        background: "#1A1A24",
-        border: "1px solid #FF4D6A",
-        color: "#F0F0FF",
+        background: "var(--surface-raised)",
+        border: "1px solid var(--error)",
+        color: "var(--text-primary)",
+        borderLeft: "3px solid var(--error)",
+        fontFamily: "'DM Sans', sans-serif",
       },
-      ...options,
     }),
-  info: (message: string, options?: Parameters<typeof sonnerToast>[1]) =>
+  info: (message: string) =>
     sonnerToast(message, {
+      icon: <Info size={16} style={{ color: "var(--accent)" }} />,
       style: {
-        background: "#1A1A24",
-        border: "1px solid #2A2A38",
-        color: "#F0F0FF",
+        background: "var(--surface-raised)",
+        border: "1px solid rgba(99,102,241,0.3)",
+        color: "var(--text-primary)",
+        borderLeft: "3px solid var(--accent)",
+        fontFamily: "'DM Sans', sans-serif",
       },
-      ...options,
     }),
-  warning: (message: string, options?: Parameters<typeof sonnerToast.warning>[1]) =>
+  warning: (message: string) =>
     sonnerToast.warning(message, {
+      icon: <AlertTriangle size={16} style={{ color: "var(--warning)" }} />,
       style: {
-        background: "#1A1A24",
-        border: "1px solid #FFB547",
-        color: "#F0F0FF",
+        background: "var(--surface-raised)",
+        border: "1px solid var(--warning)",
+        color: "var(--text-primary)",
+        borderLeft: "3px solid var(--warning)",
+        fontFamily: "'DM Sans', sans-serif",
       },
-      ...options,
     }),
   loading: (message: string, options?: Parameters<typeof sonnerToast.loading>[1]) =>
     sonnerToast.loading(message, {
       style: {
-        background: "#1A1A24",
-        border: "1px solid #2A2A38",
-        color: "#F0F0FF",
+        background: "var(--surface-raised)",
+        border: "1px solid var(--border)",
+        color: "var(--text-primary)",
+        fontFamily: "'DM Sans', sans-serif",
       },
       ...options,
     }),
@@ -52,16 +63,17 @@ export const toast = {
 export function VouchToaster() {
   return (
     <Toaster
-      theme="dark"
+      position="bottom-right"
+      duration={4000}
+      richColors={false}
       toastOptions={{
         style: {
-          background: "#1A1A24",
-          border: "1px solid #2A2A38",
-          color: "#F0F0FF",
+          background: "var(--surface-raised)",
+          border: "1px solid var(--border)",
+          color: "var(--text-primary)",
           fontFamily: "'DM Sans', sans-serif",
         },
       }}
-      position="bottom-right"
     />
   )
 }

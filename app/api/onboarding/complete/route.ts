@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { auth, currentUser } from "@clerk/nextjs/server"
 import { prisma } from "@/lib/prisma"
 
@@ -69,5 +69,7 @@ export async function POST(req: NextRequest) {
     })
   }
 
-  return NextResponse.json({ success: true, userId: user.id })
+  const userName = fullName || email.split("@")[0] || "there"
+
+  return NextResponse.json({ success: true, userId: user.id, userName })
 }

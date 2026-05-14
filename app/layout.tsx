@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import { Syne, DM_Sans, Instrument_Serif } from "next/font/google"
 import { ClerkProvider } from "@clerk/nextjs"
 import { VouchToaster } from "@/components/ui/vouch"
+import { Toaster } from "sonner"
+import PageTransitionWrapper from "@/components/ui/PageTransitionWrapper"
 import "./globals.css"
 
 const syne = Syne({
@@ -46,8 +48,11 @@ export default function RootLayout({
             fontFamily: "'DM Sans', sans-serif",
           }}
         >
-          {children}
+          <PageTransitionWrapper>
+            {children}
+          </PageTransitionWrapper>
           <VouchToaster />
+          <Toaster position="bottom-right" duration={4000} richColors={false} />
         </body>
       </html>
     </ClerkProvider>

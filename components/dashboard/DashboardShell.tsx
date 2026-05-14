@@ -41,7 +41,7 @@ export default function DashboardShell({
   return (
     <div className="flex h-screen bg-[var(--background)] overflow-hidden">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex flex-col w-[240px] shrink-0 bg-[var(--surface)] border-r border-[var(--border)]">
+      <aside className="hidden md:flex flex-col shrink-0 bg-[var(--surface)] border-r border-[var(--border)]" style={{ transition: "width 0.2s ease" }}>
         <Sidebar
           userType={userType}
           userName={userName}

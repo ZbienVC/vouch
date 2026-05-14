@@ -6,14 +6,7 @@ const VouchSkeleton = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTML
     return (
       <div
         ref={ref}
-        className={cn(
-          "rounded-vouch-sm bg-[var(--surface-raised)] animate-pulse",
-          "relative overflow-hidden",
-          "after:absolute after:inset-0 after:translate-x-[-100%]",
-          "after:bg-gradient-to-r after:from-transparent after:via-[var(--surface-high)]/40 after:to-transparent",
-          "after:animate-[shimmer_2s_infinite]",
-          className
-        )}
+        className={cn("rounded-vouch-sm skeleton-shimmer", className)}
         {...props}
       />
     )
