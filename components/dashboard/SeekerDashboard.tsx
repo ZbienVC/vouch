@@ -1,7 +1,7 @@
 ﻿"use client"
 
 import Link from "next/link"
-import { FileText, Clock, CheckCircle, GitMerge, Inbox } from "lucide-react"
+import { FileText, Clock, CheckCircle, GitMerge, Inbox, ArrowRight } from "lucide-react"
 import { VouchCard, VouchButton, VouchSkeleton } from "@/components/ui/vouch"
 import ReferrerCard, { type ReferrerCardData } from "@/components/referrers/ReferrerCard"
 
@@ -43,7 +43,7 @@ export default function SeekerDashboard({
       {/* Welcome Header */}
       <div>
         <h1 className="font-display text-2xl font-bold text-[var(--text-primary)]">
-          {greeting}, {firstName} 👋
+          {greeting}, {firstName}
         </h1>
         <p className="mt-1 text-[var(--text-secondary)]">
           {"Here's what's happening with your referral search."}
@@ -107,8 +107,8 @@ export default function SeekerDashboard({
           </p>
         </div>
         <Link href="/dashboard/requests/new" className="shrink-0">
-          <VouchButton variant="primary" size="md">
-            Post a Request →
+          <VouchButton variant="primary" size="md" className="flex items-center gap-2">
+            Post a Request <ArrowRight size={16} />
           </VouchButton>
         </Link>
       </div>
@@ -121,9 +121,9 @@ export default function SeekerDashboard({
           </h2>
           <Link
             href="/dashboard/browse"
-            className="text-sm text-[var(--accent)] hover:underline"
+            className="text-sm text-[var(--accent)] hover:underline flex items-center gap-1"
           >
-            View All →
+            View All <ArrowRight size={14} />
           </Link>
         </div>
 

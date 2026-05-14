@@ -1,5 +1,5 @@
-﻿import type { Metadata } from "next"
-import { Syne, DM_Sans } from "next/font/google"
+import type { Metadata } from "next"
+import { Syne, DM_Sans, Instrument_Serif } from "next/font/google"
 import { ClerkProvider } from "@clerk/nextjs"
 import { VouchToaster } from "@/components/ui/vouch"
 import "./globals.css"
@@ -18,6 +18,13 @@ const dmSans = DM_Sans({
   display: "swap",
 })
 
+const instrumentSerif = Instrument_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-serif",
+  display: "swap",
+})
+
 export const metadata: Metadata = {
   title: "Vouch — Get Referred. Get Hired.",
   description:
@@ -31,11 +38,11 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${syne.variable} ${dmSans.variable}`}>
+      <html lang="en" className={`${syne.variable} ${dmSans.variable} ${instrumentSerif.variable}`}>
         <body
           style={{
-            backgroundColor: "#0A0A0F",
-            color: "#F0F0FF",
+            backgroundColor: "var(--page-bg)",
+            color: "var(--text-primary)",
             fontFamily: "'DM Sans', sans-serif",
           }}
         >

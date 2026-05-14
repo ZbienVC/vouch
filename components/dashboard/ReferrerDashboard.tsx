@@ -10,6 +10,7 @@ import {
   GitMerge,
   FileText,
   ArrowUpRight,
+  ArrowRight,
 } from "lucide-react"
 import { VouchCard, VouchButton, VouchBadge } from "@/components/ui/vouch"
 
@@ -109,7 +110,7 @@ export default function ReferrerDashboard({
       {/* Welcome Header */}
       <div>
         <h1 className="font-display text-2xl font-bold text-[var(--text-primary)]">
-          {greeting}, {firstName} 👋
+          {greeting}, {firstName}
         </h1>
         <p className="mt-1 text-[var(--text-secondary)]">
           {"Here's your referrer overview."}
@@ -228,8 +229,8 @@ export default function ReferrerDashboard({
           </p>
         </div>
         <Link href="/dashboard/listings/new" className="shrink-0">
-          <VouchButton variant="primary" size="md">
-            Create a Listing →
+          <VouchButton variant="primary" size="md" className="flex items-center gap-2">
+            Create a Listing <ArrowRight size={16} />
           </VouchButton>
         </Link>
       </div>
@@ -242,9 +243,9 @@ export default function ReferrerDashboard({
           </h2>
           <Link
             href="/dashboard/browse-requests"
-            className="text-sm text-[var(--accent)] hover:underline"
+            className="text-sm text-[var(--accent)] hover:underline flex items-center gap-1"
           >
-            Browse All →
+            Browse All <ArrowRight size={14} />
           </Link>
         </div>
 

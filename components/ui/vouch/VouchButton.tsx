@@ -3,23 +3,23 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--page-bg)]",
+  "inline-flex items-center justify-center font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none",
   {
     variants: {
       variant: {
         primary:
-          "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] active:scale-[0.98]",
+          "btn-shimmer text-white active:scale-[0.98]",
         secondary:
-          "bg-transparent text-[var(--text-primary)] border border-[var(--border)] hover:border-[var(--accent)] hover:text-[var(--accent)]",
+          "bg-transparent text-[var(--text-primary)] border border-[var(--accent)] hover:text-[var(--accent-hover)]",
         ghost:
-          "bg-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-raised)]",
+          "bg-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:underline",
         destructive:
           "bg-[var(--error)] text-white hover:opacity-90 active:scale-[0.98]",
       },
       size: {
-        sm: "h-8 px-3 text-sm rounded-vouch-sm gap-1.5",
-        md: "h-10 px-4 text-sm rounded-vouch gap-2",
-        lg: "h-12 px-6 text-base rounded-vouch gap-2",
+        sm: "h-9 px-3 text-sm rounded-vouch-sm gap-1.5",
+        md: "h-11 px-4 text-sm rounded-vouch gap-2",
+        lg: "h-11 px-6 text-base rounded-vouch gap-2",
       },
     },
     defaultVariants: {
@@ -36,12 +36,52 @@ export interface VouchButtonProps
 }
 
 const VouchButton = React.forwardRef<HTMLButtonElement, VouchButtonProps>(
-  ({ className, variant, size, loading, disabled, children, ...props }, ref) => {
+  ({ className, variant, size, loading, disabled, style, children, ...props }, ref) => {
+    const isPrimary = !variant || variant === "primary"
+    const primaryStyle: React.CSSProperties = isPrimary
+      ? {
+          background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+          borderRadius: "8px",
+          transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+          outline: "none",
+        }
+      : {
+          transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+          outline: "none",
+          borderRadius: "8px",
+        }
+
     return (
       <button
         ref={ref}
         className={cn(buttonVariants({ variant, size }), className)}
         disabled={disabled || loading}
+        style={{ ...primaryStyle, ...style }}
+        onMouseEnter={(e) => {
+          if (isPrimary && !(disabled || loading)) {
+            const el = e.currentTarget
+            el.style.boxShadow = "0 4px 20px rgba(99, 102, 241, 0.4)"
+            el.style.transform = "translateY(-1px)"
+          }
+          props.onMouseEnter?.(e)
+        }}
+        onMouseLeave={(e) => {
+          if (isPrimary) {
+            const el = e.currentTarget
+            el.style.boxShadow = ""
+            el.style.transform = ""
+          }
+          props.onMouseLeave?.(e)
+        }}
+        onFocus={(e) => {
+          e.currentTarget.style.outline = "2px solid rgba(99, 102, 241, 0.6)"
+          e.currentTarget.style.outlineOffset = "2px"
+          props.onFocus?.(e)
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.outline = "none"
+          props.onBlur?.(e)
+        }}
         {...props}
       >
         {loading ? (
@@ -51,19 +91,8 @@ const VouchButton = React.forwardRef<HTMLButtonElement, VouchButtonProps>(
             fill="none"
             viewBox="0 0 24 24"
           >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            />
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
         ) : null}
         {children}
