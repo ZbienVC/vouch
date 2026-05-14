@@ -17,9 +17,9 @@ const buttonVariants = cva(
           "bg-[var(--error)] text-white hover:opacity-90 active:scale-[0.98]",
       },
       size: {
-        sm: "h-9 px-3 text-sm rounded-vouch-sm gap-1.5",
-        md: "h-11 px-4 text-sm rounded-vouch gap-2",
-        lg: "h-11 px-6 text-base rounded-vouch gap-2",
+        sm: "h-9 px-3 text-sm gap-1.5",
+        md: "h-11 px-4 text-sm gap-2",
+        lg: "h-11 px-6 text-base gap-2",
       },
     },
     defaultVariants: {
@@ -38,17 +38,26 @@ export interface VouchButtonProps
 const VouchButton = React.forwardRef<HTMLButtonElement, VouchButtonProps>(
   ({ className, variant, size, loading, disabled, style, children, ...props }, ref) => {
     const isPrimary = !variant || variant === "primary"
+    const isSecondary = variant === "secondary"
+    const isGhost = variant === "ghost"
+
+    const getBorderRadius = () => {
+      if (isPrimary) return "50px"
+      if (isSecondary || isGhost) return "10px"
+      return "10px"
+    }
+
     const primaryStyle: React.CSSProperties = isPrimary
       ? {
           background: "linear-gradient(135deg, #6366F1, #4F46E5)",
-          borderRadius: "8px",
+          borderRadius: getBorderRadius(),
           transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
           outline: "none",
         }
       : {
           transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
           outline: "none",
-          borderRadius: "8px",
+          borderRadius: getBorderRadius(),
         }
 
     return (

@@ -54,8 +54,8 @@ function CompanyMarquee() {
                 className="font-mono text-sm px-4 py-2 rounded-lg transition-opacity duration-200 cursor-default select-none"
                 style={{
                   color: 'rgba(241, 245, 249, 0.4)',
-                  background: 'var(--surface)',
-                  border: '1px solid var(--border)',
+                  background: 'var(--bg-surface)',
+                  border: '1px solid var(--border-subtle)',
                   whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(241,245,249,0.8)' }}
@@ -75,8 +75,8 @@ function CompanyMarquee() {
                 className="font-mono text-sm px-4 py-2 rounded-lg transition-opacity duration-200 cursor-default select-none"
                 style={{
                   color: 'rgba(241, 245, 249, 0.4)',
-                  background: 'var(--surface)',
-                  border: '1px solid var(--border)',
+                  background: 'var(--bg-surface)',
+                  border: '1px solid var(--border-subtle)',
                   whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(241,245,249,0.8)' }}
@@ -143,7 +143,7 @@ function TestimonialColumn({ testimonials, label }: { testimonials: typeof seeke
         style={{
           opacity: visible ? 1 : 0,
           transition: 'opacity 0.3s ease',
-          background: 'rgba(15,23,41,0.7)',
+          background: 'rgba(13, 21, 37, 0.7)',
           backdropFilter: 'blur(16px)',
           border: '1px solid rgba(99,102,241,0.2)',
           boxShadow: '0 0 30px rgba(99,102,241,0.06) inset',
@@ -226,7 +226,7 @@ function EscrowSection() {
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center"
                   style={{
-                    background: 'var(--surface)',
+                    background: 'var(--bg-surface)',
                     border: `2px solid ${step.color}`,
                     boxShadow: `0 0 20px ${step.color}33`,
                   }}
@@ -278,7 +278,7 @@ function EscrowSection() {
               <div
                 key={i}
                 className="flex items-start gap-3 p-4 rounded-xl"
-                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+                style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}
               >
                 <ItemIcon size={18} style={{ color: 'var(--accent-secondary)', flexShrink: 0, marginTop: 2 }} />
                 <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item.text}</p>
@@ -313,10 +313,17 @@ const howItWorksSteps = [
 export default function HomePage() {
   const stat3x = useCountUp(3)
   const stat48 = useCountUp(48)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 60)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
     <div
-      style={{ backgroundColor: 'var(--page-bg)', minHeight: '100vh' }}
+      style={{ backgroundColor: 'var(--bg-base)', minHeight: '100vh' }}
       className="relative overflow-hidden"
     >
       {/* Hero background orbs */}
@@ -324,143 +331,147 @@ export default function HomePage() {
       <div className="orb-teal" />
       <div className="noise-overlay" />
 
-      {/* Nav */}
-      <nav className="relative z-10 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
-        <span className="font-display text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-          vouch<span style={{ color: 'var(--accent)' }}>.</span>
-        </span>
-        <div className="flex items-center gap-4">
-          <Link
-            href="/sign-in"
-            className="text-sm font-medium transition-colors"
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/sign-up"
-            className="btn-shimmer px-4 py-2 text-sm font-medium text-white transition-all"
-            style={{
-              background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
-              borderRadius: '8px',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.4)'
-              e.currentTarget.style.transform = 'translateY(-1px)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = ''
-              e.currentTarget.style.transform = ''
-            }}
-          >
-            Get Started
-          </Link>
+      {/* Task 6: Frosted Glass Navbar */}
+      <nav className={`landing-nav${scrolled ? ' scrolled' : ''}`}>
+        <div className="flex items-center justify-between px-8 w-full max-w-7xl mx-auto">
+          <span style={{ fontSize: 18, fontWeight: 600, color: 'var(--text-primary)' }}>
+            vouch<span style={{ color: 'var(--text-accent)' }}>.</span>
+          </span>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/sign-in"
+              className="transition-colors"
+              style={{
+                fontSize: 14,
+                color: 'var(--text-secondary)',
+                transition: 'color 150ms ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-primary)' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-secondary)' }}
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/sign-up"
+              className="btn-shimmer flex items-center text-sm font-medium text-white transition-all"
+              style={{
+                background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
+                borderRadius: '50px',
+                height: '38px',
+                padding: '0 18px',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.4)'
+                e.currentTarget.style.transform = 'translateY(-1px)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = ''
+                e.currentTarget.style.transform = ''
+              }}
+            >
+              Get Started
+            </Link>
+          </div>
         </div>
       </nav>
 
-      {/* Hero */}
-      <main className="relative z-10 flex flex-col items-center text-center px-6 pt-20 pb-32 max-w-4xl mx-auto">
-        {/* Beta badge */}
-        <div
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-8"
-          style={{
-            backgroundColor: 'rgba(99,102,241,0.1)',
-            border: '1px solid rgba(99,102,241,0.3)',
-            color: 'var(--accent)',
-          }}
-        >
-          <span className="animate-pulse inline-block w-2 h-2 bg-green-400 rounded-full" />
-          Beta — limited early access
-        </div>
-
-        {/* Headline */}
-        <h1
-          className="text-6xl md:text-7xl font-bold leading-tight mb-6"
-          style={{ fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}
-        >
-          <span className="block animate-fade-up" style={{ animationDelay: '0ms' }}>
-            Get Referred.
-          </span>
-          <span
-            className="block animate-fade-up gradient-text-animated"
-            style={{ animationDelay: '300ms' }}
-          >
-            Get Hired.
-          </span>
-        </h1>
-
-        {/* Subheadline */}
-        <p
-          className="text-xl md:text-2xl max-w-2xl mb-12 leading-relaxed animate-fade-up"
-          style={{ color: 'var(--text-secondary)', animationDelay: '500ms' }}
-        >
-          The two-sided marketplace connecting job seekers with company insiders.
-          Skip the application pile. Get your resume seen.
-        </p>
-
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-20 animate-fade-up" style={{ animationDelay: '600ms' }}>
-          <Link
-            href="/sign-up"
-            className="btn-shimmer flex items-center gap-2 px-8 py-4 text-base font-semibold text-white transition-all"
-            style={{
-              background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
-              borderRadius: '8px',
-              boxShadow: '0 0 32px rgba(99,102,241,0.3)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.5)'
-              e.currentTarget.style.transform = 'translateY(-1px)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 32px rgba(99,102,241,0.3)'
-              e.currentTarget.style.transform = ''
-            }}
-          >
-            Find a Referral <ArrowRight size={16} />
-          </Link>
-          <Link
-            href="/sign-up"
-            className="flex items-center gap-2 px-8 py-4 text-base font-semibold transition-all"
-            style={{
-              backgroundColor: 'transparent',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--accent)',
-              borderRadius: '8px',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent-hover)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-primary)' }}
-          >
-            Earn by Referring
-          </Link>
-        </div>
-
-        {/* Stats */}
-        <div
-          className="grid grid-cols-3 gap-8 w-full max-w-lg py-8 animate-fade-up"
-          style={{
-            borderTop: '1px solid var(--border)',
-            borderBottom: '1px solid var(--border)',
-            animationDelay: '700ms',
-          }}
-        >
-          <div className="flex flex-col items-center gap-1">
-            <span className="font-display text-3xl font-bold" style={{ color: 'var(--accent)' }}>
-              {stat3x}x
-            </span>
-            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Higher interview rate</span>
+      {/* Hero — padding-top 64px for fixed nav */}
+      <main className="relative z-10 flex flex-col items-center text-center px-6 pb-32 max-w-4xl mx-auto" style={{ paddingTop: 64 }}>
+        <div style={{ paddingTop: 80 }}>
+          {/* Task 7: Beta Badge with Pulse Dot + Task 8: hero-badge animation */}
+          <div className="beta-badge hero-badge mb-8">
+            <span className="badge-dot" />
+            <span>Now in Beta</span>
           </div>
-          <div className="flex flex-col items-center gap-1">
-            <span className="font-display text-3xl font-bold" style={{ color: 'var(--accent)' }}>
-              {stat48}h
+
+          {/* Headline — Tasks 5 & 8 */}
+          <h1 className="mb-6">
+            <span className="block hero-line-1">
+              Get Referred.
             </span>
-            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Average turnaround</span>
+            <span className="block hero-line-2">
+              Get Hired.
+            </span>
+          </h1>
+
+          {/* Subheadline — Tasks 3, 5, 8 */}
+          <p
+            className="hero-sub mb-12"
+            style={{
+              fontSize: 18,
+              maxWidth: 560,
+              lineHeight: 1.6,
+              color: 'var(--text-secondary)',
+              margin: '0 auto 48px',
+            }}
+          >
+            The two-sided marketplace connecting job seekers with company insiders.
+            Skip the application pile. Get your resume seen.
+          </p>
+
+          {/* CTAs — Task 8: hero-buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-20 hero-buttons justify-center">
+            <Link
+              href="/sign-up"
+              className="btn-shimmer flex items-center gap-2 px-8 py-4 text-base font-semibold text-white transition-all"
+              style={{
+                background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
+                borderRadius: '50px',
+                boxShadow: '0 0 32px rgba(99,102,241,0.3)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.5)'
+                e.currentTarget.style.transform = 'translateY(-1px)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 0 32px rgba(99,102,241,0.3)'
+                e.currentTarget.style.transform = ''
+              }}
+            >
+              Find a Referral <ArrowRight size={16} />
+            </Link>
+            <Link
+              href="/sign-up"
+              className="flex items-center gap-2 px-8 py-4 text-base font-semibold transition-all"
+              style={{
+                backgroundColor: 'transparent',
+                color: 'var(--text-primary)',
+                border: '1px solid var(--accent)',
+                borderRadius: '10px',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent-hover)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-primary)' }}
+            >
+              Earn by Referring
+            </Link>
           </div>
-          <div className="flex flex-col items-center gap-1">
-            <span className="font-display text-3xl font-bold" style={{ color: 'var(--accent)' }}>
-              100%
-            </span>
-            <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>Escrow protected</span>
+
+          {/* Stats — Tasks 3, 5, 8 */}
+          <div
+            className="grid grid-cols-3 gap-8 w-full max-w-lg py-8 hero-stats mx-auto"
+            style={{
+              borderTop: '1px solid var(--border-subtle)',
+              borderBottom: '1px solid var(--border-subtle)',
+            }}
+          >
+            <div className="flex flex-col items-center gap-1">
+              <span className="hero-stat-number">
+                {stat3x}x
+              </span>
+              <span className="hero-stat-label">Higher interview rate</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <span className="hero-stat-number">
+                {stat48}h
+              </span>
+              <span className="hero-stat-label">Average turnaround</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <span className="hero-stat-number">
+                100%
+              </span>
+              <span className="hero-stat-label">Escrow protected</span>
+            </div>
           </div>
         </div>
       </main>
@@ -490,8 +501,8 @@ export default function HomePage() {
                 <div
                   className="group relative p-6 rounded-xl border cursor-default"
                   style={{
-                    background: 'var(--surface)',
-                    borderColor: 'rgba(148, 163, 184, 0.12)',
+                    background: 'var(--bg-surface)',
+                    borderColor: 'var(--border-subtle)',
                     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                   }}
                   onMouseEnter={(e) => {
@@ -500,7 +511,7 @@ export default function HomePage() {
                     e.currentTarget.style.boxShadow = '0 8px 32px rgba(99,102,241,0.12)'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(148,163,184,0.12)'
+                    e.currentTarget.style.borderColor = 'var(--border-subtle)'
                     e.currentTarget.style.transform = ''
                     e.currentTarget.style.boxShadow = ''
                   }}
@@ -594,7 +605,7 @@ export default function HomePage() {
               className="btn-shimmer inline-flex items-center gap-2 px-8 py-4 text-base font-semibold text-white"
               style={{
                 background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
-                borderRadius: '8px',
+                borderRadius: '50px',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.4)'
@@ -614,7 +625,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer
         className="relative z-10 text-center py-8 text-sm"
-        style={{ color: 'var(--text-muted)', borderTop: '1px solid var(--border)' }}
+        style={{ color: 'var(--text-muted)', borderTop: '1px solid var(--border-subtle)' }}
       >
         <p>© 2025 Vouch. All rights reserved.</p>
       </footer>

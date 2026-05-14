@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useUser } from "@clerk/nextjs"
@@ -14,6 +14,9 @@ import {
 import { toast } from "@/components/ui/vouch"
 import { useOnboardingStore } from "@/lib/onboarding-store"
 import { supabase } from "@/lib/supabase"
+
+const STEP_COUNT = 3
+const CURRENT_STEP = 3
 
 export default function OnboardingVerifyPage() {
   const router = useRouter()
@@ -32,6 +35,14 @@ export default function OnboardingVerifyPage() {
   const [idUploaded, setIdUploaded] = useState(false)
 
   const [completing, setCompleting] = useState(false)
+
+  // Task 15: Animated progress bar (step 3 of 3 = 100%)
+  const progressPct = 100
+  const [barWidth, setBarWidth] = useState(0)
+  useEffect(() => {
+    const timer = setTimeout(() => setBarWidth(progressPct), 100)
+    return () => clearTimeout(timer)
+  }, [progressPct])
 
   const handleSendOtp = async () => {
     if (!workEmail) {
@@ -143,30 +154,25 @@ export default function OnboardingVerifyPage() {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-start px-6 py-12"
-      style={{ backgroundColor: "#0A0A0F" }}
+      style={{ backgroundColor: "var(--bg-base)" }}
     >
-      {/* Progress bar */}
-      <div className="w-full max-w-[640px] mb-8">
-        <div
-          className="w-full h-1 rounded-full overflow-hidden"
-          style={{ backgroundColor: "#111118" }}
-        >
-          <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{ width: "100%", backgroundColor: "#6C63FF" }}
-          />
+      {/* Task 15: Animated progress bar */}
+      <div className="w-full max-w-[640px] mb-4 mt-4">
+        <div className="flex items-center justify-between mb-2">
+          <span style={{ fontSize: 12, color: "var(--text-tertiary)" }}>Step {CURRENT_STEP} of {STEP_COUNT}</span>
+          <span style={{ fontSize: 12, fontWeight: 500, color: "var(--text-accent)" }}>{barWidth}%</span>
         </div>
-        <p className="text-xs mt-2" style={{ color: "#8888AA" }}>
-          Step 3 of 3
-        </p>
+        <div className="progress-track">
+          <div className="progress-fill" style={{ width: `${barWidth}%` }} />
+        </div>
       </div>
 
       <div className="w-full max-w-[640px]">
         {/* Back link */}
         <Link
           href="/onboarding/profile"
-          className="inline-flex items-center text-sm mb-8 transition-colors hover:text-[#F0F0FF]"
-          style={{ color: "#8888AA" }}
+          className="inline-flex items-center text-sm mb-8 transition-colors hover:text-[var(--text-primary)]"
+          style={{ color: "var(--text-secondary)" }}
         >
           ← Back
         </Link>
@@ -174,11 +180,11 @@ export default function OnboardingVerifyPage() {
         {/* Headline */}
         <h1
           className="text-3xl font-bold mb-2"
-          style={{ fontFamily: "var(--font-syne)", color: "#F0F0FF" }}
+          style={{ fontFamily: "var(--font-syne)", color: "var(--text-primary)" }}
         >
           Verify your identity
         </h1>
-        <p className="text-sm mb-8" style={{ color: "#8888AA" }}>
+        <p className="text-sm mb-8" style={{ color: "var(--text-secondary)" }}>
           This helps us keep Vouch trusted and safe for everyone.
         </p>
 
@@ -187,11 +193,11 @@ export default function OnboardingVerifyPage() {
           <div className="flex flex-col gap-6 mb-6">
             <div
               className="p-6 rounded-vouch border"
-              style={{ backgroundColor: "#111118", borderColor: "#2A2A38" }}
+              style={{ backgroundColor: "var(--bg-elevated)", borderColor: "var(--border-subtle)" }}
             >
               <h2
                 className="text-lg font-semibold mb-4"
-                style={{ fontFamily: "var(--font-syne)", color: "#F0F0FF" }}
+                style={{ fontFamily: "var(--font-syne)", color: "var(--text-primary)" }}
               >
                 Work Email Verification
               </h2>
@@ -255,28 +261,28 @@ export default function OnboardingVerifyPage() {
             {/* LinkedIn confirmation */}
             <div
               className="p-6 rounded-vouch border"
-              style={{ backgroundColor: "#111118", borderColor: "#2A2A38" }}
+              style={{ backgroundColor: "var(--bg-elevated)", borderColor: "var(--border-subtle)" }}
             >
               <h2
                 className="text-lg font-semibold mb-4"
-                style={{ fontFamily: "var(--font-syne)", color: "#F0F0FF" }}
+                style={{ fontFamily: "var(--font-syne)", color: "var(--text-primary)" }}
               >
                 LinkedIn Profile
               </h2>
               <div className="flex items-center gap-3 mb-3">
                 <VouchAvatar src={avatarUrl} name={fullName} size="sm" />
                 <div>
-                  <p className="text-sm font-medium" style={{ color: "#F0F0FF" }}>
+                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
                     {fullName || "Your Name"}
                   </p>
                   {linkedinUrl && (
-                    <p className="text-xs" style={{ color: "#8888AA" }}>
+                    <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
                       {linkedinUrl}
                     </p>
                   )}
                 </div>
               </div>
-              <p className="text-sm mb-3" style={{ color: "#8888AA" }}>
+              <p className="text-sm mb-3" style={{ color: "var(--text-secondary)" }}>
                 Your LinkedIn will be reviewed by our team within 24 hours.
               </p>
               <VouchBadge variant="warning">Under Review</VouchBadge>
@@ -289,11 +295,11 @@ export default function OnboardingVerifyPage() {
           <div className="flex flex-col gap-6 mb-6">
             <div
               className="p-6 rounded-vouch border"
-              style={{ backgroundColor: "#111118", borderColor: "#2A2A38" }}
+              style={{ backgroundColor: "var(--bg-elevated)", borderColor: "var(--border-subtle)" }}
             >
               <h2
                 className="text-lg font-semibold mb-4"
-                style={{ fontFamily: "var(--font-syne)", color: "#F0F0FF" }}
+                style={{ fontFamily: "var(--font-syne)", color: "var(--text-primary)" }}
               >
                 Government ID Verification
               </h2>
@@ -301,9 +307,9 @@ export default function OnboardingVerifyPage() {
               <div
                 className="p-4 rounded-vouch mb-4 border text-sm"
                 style={{
-                  backgroundColor: "#1A1A24",
-                  borderColor: "#2A2A38",
-                  color: "#8888AA",
+                  backgroundColor: "var(--bg-surface)",
+                  borderColor: "var(--border-subtle)",
+                  color: "var(--text-secondary)",
                 }}
               >
                 Your identity is verified privately and never shared with referrers. We use this to prevent fraud.
@@ -312,7 +318,7 @@ export default function OnboardingVerifyPage() {
               {idUploaded ? (
                 <div className="flex items-center gap-2">
                   <CheckCircle size={20} color="#00D4AA" />
-                  <span className="text-sm font-medium mr-2" style={{ color: "#F0F0FF" }}>
+                  <span className="text-sm font-medium mr-2" style={{ color: "var(--text-primary)" }}>
                     Document uploaded ✓
                   </span>
                   <VouchBadge variant="success">Uploaded</VouchBadge>
@@ -320,20 +326,20 @@ export default function OnboardingVerifyPage() {
               ) : (
                 <label
                   className="flex flex-col items-center justify-center gap-3 p-8 rounded-vouch border-2 border-dashed cursor-pointer transition-all duration-200 hover:border-[#6C63FF]/50"
-                  style={{ borderColor: "#2A2A38" }}
+                  style={{ borderColor: "var(--border-subtle)" }}
                 >
                   {idUploading ? (
-                    <span className="text-sm" style={{ color: "#8888AA" }}>
+                    <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
                       Uploading...
                     </span>
                   ) : (
                     <>
-                      <Upload size={32} color="#8888AA" />
+                      <Upload size={32} style={{ color: "var(--text-tertiary)" }} />
                       <div className="text-center">
-                        <p className="text-sm font-medium" style={{ color: "#F0F0FF" }}>
+                        <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
                           Upload Government ID
                         </p>
-                        <p className="text-xs mt-1" style={{ color: "#8888AA" }}>
+                        <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
                           JPG, PNG, or PDF — max 10MB
                         </p>
                       </div>
@@ -349,7 +355,7 @@ export default function OnboardingVerifyPage() {
                 </label>
               )}
 
-              <p className="text-xs mt-3" style={{ color: "#55556A" }}>
+              <p className="text-xs mt-3" style={{ color: "var(--text-tertiary)" }}>
                 Verification is reviewed within 1 business day.
               </p>
             </div>

@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import { Syne, DM_Sans, Instrument_Serif } from "next/font/google"
 import { ClerkProvider } from "@clerk/nextjs"
 import { VouchToaster } from "@/components/ui/vouch"
-import { Toaster } from "sonner"
 import PageTransitionWrapper from "@/components/ui/PageTransitionWrapper"
 import "./globals.css"
 
@@ -43,7 +42,7 @@ export default function RootLayout({
       <html lang="en" className={`${syne.variable} ${dmSans.variable} ${instrumentSerif.variable}`}>
         <body
           style={{
-            backgroundColor: "var(--page-bg)",
+            backgroundColor: "var(--bg-base)",
             color: "var(--text-primary)",
             fontFamily: "'DM Sans', sans-serif",
           }}
@@ -52,7 +51,6 @@ export default function RootLayout({
             {children}
           </PageTransitionWrapper>
           <VouchToaster />
-          <Toaster position="bottom-right" duration={4000} richColors={false} />
         </body>
       </html>
     </ClerkProvider>

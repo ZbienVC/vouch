@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-vouch-pill transition-colors",
+  "inline-flex items-center px-2.5 py-0.5 text-xs font-medium transition-colors",
   {
     variants: {
       variant: {
@@ -25,9 +25,14 @@ export interface VouchBadgeProps
     VariantProps<typeof badgeVariants> {}
 
 const VouchBadge = React.forwardRef<HTMLSpanElement, VouchBadgeProps>(
-  ({ className, variant, ...props }, ref) => {
+  ({ className, variant, style, ...props }, ref) => {
     return (
-      <span ref={ref} className={cn(badgeVariants({ variant }), className)} {...props} />
+      <span
+        ref={ref}
+        className={cn(badgeVariants({ variant }), className)}
+        style={{ borderRadius: "20px", ...style }}
+        {...props}
+      />
     )
   }
 )

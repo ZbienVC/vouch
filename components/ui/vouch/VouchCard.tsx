@@ -14,13 +14,13 @@ const VouchCard = React.forwardRef<HTMLDivElement, VouchCardProps>(
     const resolvedVariant = elevated ? "elevated" : variant
 
     const baseStyle: React.CSSProperties = {
-      background: "var(--surface)",
-      border: "1px solid var(--border)",
-      borderRadius: "12px",
+      background: "var(--bg-surface)",
+      border: "0.5px solid var(--border-subtle)",
+      borderTop: "0.5px solid rgba(255, 255, 255, 0.06)",
+      borderRadius: "14px",
       transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
       ...(resolvedVariant === "elevated" && {
-        background: "var(--surface-raised)",
-        boxShadow: "0 4px 24px rgba(0, 0, 0, 0.3)",
+        boxShadow: "0 4px 24px rgba(0, 0, 0, 0.4)",
       }),
       ...(glow && { boxShadow: "0 0 24px rgba(99, 102, 241, 0.15)" }),
     }
@@ -42,7 +42,7 @@ const VouchCard = React.forwardRef<HTMLDivElement, VouchCardProps>(
           if (resolvedVariant === "interactive") {
             e.currentTarget.style.transform = ""
             e.currentTarget.style.boxShadow = ""
-            e.currentTarget.style.borderColor = "var(--border)"
+            e.currentTarget.style.borderColor = "var(--border-subtle)"
           }
           props.onMouseLeave?.(e)
         }}

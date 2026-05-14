@@ -6,11 +6,12 @@
 
 :root {
   --page-bg: #060B14;
-  --background: #0A0F1C;
-  --surface: #0F1729;
-  --surface-raised: #141E35;
-  --surface-high: #1A2540;
-  --border: rgba(148, 163, 184, 0.12);
+  /* Task 1: Updated color system */
+  --background: #0D1525;
+  --surface: #0D1525;
+  --surface-raised: #131E33;
+  --surface-high: #1A2744;
+  --border: rgba(148, 163, 184, 0.10);
   --accent: #6366F1;
   --accent-hover: #818CF8;
   --accent-secondary: #2DD4BF;
@@ -21,12 +22,22 @@
   --warning: #F59E0B;
   --success: #2DD4BF;
   --font-serif: 'Instrument Serif', Georgia, serif;
+  /* New tokens */
+  --bg-base: #070C18;
+  --bg-surface: #0D1525;
+  --bg-elevated: #131E33;
+  --bg-hover: #1A2744;
+  --border-subtle: rgba(148, 163, 184, 0.10);
+  --border-default: rgba(148, 163, 184, 0.18);
+  --border-focus: rgba(99, 102, 241, 0.60);
+  --text-tertiary: #64748B;
+  --text-accent: #818CF8;
 }
 
 * { box-sizing: border-box; }
 
 body {
-  background-color: var(--page-bg);
+  background-color: var(--bg-base);
   color: var(--text-primary);
   font-family: 'DM Sans', sans-serif;
 }
@@ -53,7 +64,7 @@ code, pre, .mono {
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -94,6 +105,12 @@ code, pre, .mono {
 @keyframes dash-flow {
   from { stroke-dashoffset: 100; }
   to { stroke-dashoffset: 0; }
+}
+
+/* Task 7: Pulse dot animation */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
 }
 
 /* ===================== ORB BACKGROUNDS ===================== */
@@ -197,4 +214,166 @@ code, pre, .mono {
 .dash-animated {
   stroke-dasharray: 8, 4;
   animation: dash-flow 2s linear infinite;
+}
+
+/* ===================== TASK 5: HERO TYPOGRAPHY ===================== */
+
+.hero-line-1 {
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 700;
+  font-family: 'Instrument Serif', serif;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  animation: fade-up 0.6s ease both;
+  animation-delay: 80ms;
+}
+
+.hero-line-2 {
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 700;
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  background: linear-gradient(135deg, #818CF8, #6EE7B7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  animation: fade-up 0.6s ease both;
+  animation-delay: 160ms;
+}
+
+.hero-stat-number {
+  font-size: 42px;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.hero-stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ===================== TASK 6: FROSTED GLASS NAVBAR ===================== */
+
+.landing-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(7, 12, 24, 0.70);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 0.5px solid rgba(148, 163, 184, 0.10);
+  transition: background 0.3s ease, border-color 0.3s ease;
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+
+.landing-nav.scrolled {
+  background: rgba(7, 12, 24, 0.92);
+  border-bottom-color: rgba(148, 163, 184, 0.18);
+}
+
+/* ===================== TASK 7: BETA BADGE ===================== */
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ADE80;
+  animation: pulse-dot 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.beta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  background: rgba(99, 102, 241, 0.10);
+  border: 0.5px solid rgba(99, 102, 241, 0.30);
+  border-radius: 50px;
+  font-size: 13px;
+  color: #A5B4FC;
+}
+
+/* ===================== TASK 8: HERO SCROLL REVEAL ===================== */
+
+.hero-badge {
+  animation: fade-up 0.5s ease both;
+  animation-delay: 0ms;
+}
+
+.hero-sub {
+  animation: fade-up 0.6s ease both;
+  animation-delay: 240ms;
+}
+
+.hero-buttons {
+  animation: fade-up 0.6s ease both;
+  animation-delay: 320ms;
+}
+
+.hero-stats {
+  animation: fade-up 0.6s ease both;
+  animation-delay: 420ms;
+}
+
+/* ===================== TASK 9: AUTH CARD ===================== */
+
+.auth-card {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-default);
+  border-radius: 20px;
+  padding: 40px 36px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.08),
+    0 24px 48px rgba(0, 0, 0, 0.40),
+    0 0 80px rgba(99, 102, 241, 0.06);
+}
+
+/* ===================== TASK 11: OR DIVIDER ===================== */
+
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: '';
+  flex: 1;
+  height: 0.5px;
+  background: var(--border-subtle);
+}
+
+.or-divider span {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+/* ===================== TASK 15: PROGRESS BAR ===================== */
+
+.progress-track {
+  height: 3px;
+  background: var(--border-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366F1, #818CF8);
+  border-radius: 4px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }

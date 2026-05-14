@@ -4,21 +4,21 @@ import { Shield, Zap, Users } from "lucide-react"
 export default function SignUpPage() {
   return (
     <div
-      style={{ backgroundColor: "var(--page-bg)", minHeight: "100vh" }}
+      style={{ backgroundColor: "var(--bg-base)", minHeight: "100vh" }}
       className="flex"
     >
       {/* Left panel */}
       <div
         className="hidden lg:flex flex-col justify-center px-16 w-1/2 relative overflow-hidden"
-        style={{ backgroundColor: "var(--surface)", borderRight: "1px solid var(--border)" }}
+        style={{ backgroundColor: "var(--bg-surface)", borderRight: "1px solid var(--border-subtle)" }}
       >
         <div className="orb-purple" style={{ opacity: 0.5 }} />
         <div className="orb-teal" style={{ opacity: 0.4 }} />
         <div className="noise-overlay" />
         <div className="relative z-10">
           <div className="mb-12">
-            <span className="font-display text-3xl font-bold" style={{ color: "var(--text-primary)" }}>
-              vouch<span style={{ color: "var(--accent)" }}>.</span>
+            <span style={{ fontSize: 18, fontWeight: 600, color: "var(--text-primary)" }}>
+              vouch<span style={{ color: "var(--text-accent)" }}>.</span>
             </span>
           </div>
           <h1
@@ -56,51 +56,52 @@ export default function SignUpPage() {
 
       {/* Right panel */}
       <div className="flex flex-1 items-center justify-center p-8">
-        <div className="w-full max-w-md">
+        <div className="auth-card">
           <div className="lg:hidden mb-8 text-center">
-            <span className="font-display text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
-              vouch<span style={{ color: "var(--accent)" }}>.</span>
+            <span style={{ fontSize: 18, fontWeight: 600, color: "var(--text-primary)" }}>
+              vouch<span style={{ color: "var(--text-accent)" }}>.</span>
             </span>
           </div>
-          <div
-            className="relative rounded-2xl p-8"
-            style={{
-              background: "rgba(15, 23, 41, 0.8)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(148, 163, 184, 0.12)",
-            }}
-          >
-            <SignUp
-              fallbackRedirectUrl="/onboarding/role"
-              appearance={{
-                variables: {
-                  colorBackground: "#0F1729",
-                  colorInputBackground: "#141E35",
-                  colorInputText: "#F1F5F9",
-                  colorText: "#F1F5F9",
-                  colorTextSecondary: "#94A3B8",
-                  colorPrimary: "#6366F1",
-                  colorDanger: "#F43F5E",
-                  borderRadius: "8px",
-                  fontFamily: "Inter, sans-serif",
-                },
-                elements: {
-                  card: "bg-transparent shadow-none border-none",
-                  headerTitle: "text-xl font-semibold text-[#F1F5F9]",
-                  headerSubtitle: "text-[#94A3B8]",
-                  formButtonPrimary: "bg-gradient-to-r from-[#6366F1] to-[#4F46E5] hover:opacity-90 transition-opacity",
-                  socialButtonsBlockButton: "border border-[rgba(148,163,184,0.12)] bg-[#141E35] hover:bg-[#1A2540] text-[#F1F5F9]",
-                  dividerLine: "bg-[rgba(148,163,184,0.12)]",
-                  dividerText: "text-[#94A3B8]",
-                  formFieldInput: "bg-[#141E35] border-[rgba(148,163,184,0.12)] text-[#F1F5F9] focus:border-[#6366F1]",
-                  formFieldLabel: "text-[#94A3B8]",
-                  footerActionLink: "text-[#6366F1]",
-                  identityPreviewText: "text-[#F1F5F9]",
-                  rootBox: "w-full",
-                },
-              }}
-            />
+          <div className="mb-6">
+            <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>
+              Create your account
+            </h2>
+            <p style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
+              Start getting referred today
+            </p>
           </div>
+          <SignUp
+            fallbackRedirectUrl="/onboarding/role"
+            appearance={{
+              variables: {
+                colorBackground: "#0D1525",
+                colorInputBackground: "#131E33",
+                colorInputText: "#F1F5F9",
+                colorText: "#F1F5F9",
+                colorTextSecondary: "#94A3B8",
+                colorPrimary: "#6366F1",
+                colorDanger: "#F43F5E",
+                borderRadius: "10px",
+                fontFamily: "Inter, sans-serif",
+              },
+              elements: {
+                card: "bg-transparent shadow-none border-none",
+                headerTitle: "text-xl font-semibold text-[#F1F5F9]",
+                headerSubtitle: "text-[#94A3B8]",
+                formButtonPrimary: "bg-gradient-to-r from-[#6366F1] to-[#4F46E5] hover:opacity-90 transition-opacity",
+                socialButtonsBlockButton: "bg-[#131E33] border border-[rgba(148,163,184,0.18)] text-[#F1F5F9] h-[46px] rounded-[10px] hover:bg-[#1A2744]",
+                dividerLine: "bg-[rgba(148,163,184,0.10)] h-px",
+                dividerText: "text-[#64748B] text-xs",
+                formFieldInput: "bg-[#131E33] border border-[rgba(148,163,184,0.10)] text-[#F1F5F9] rounded-[10px] h-[46px] focus:border-[rgba(99,102,241,0.60)] focus:shadow-[0_0_0_3px_rgba(99,102,241,0.12)]",
+                formFieldLabel: "text-[#94A3B8] text-xs font-medium",
+                footerActionLink: "text-[#6366F1]",
+                identityPreviewText: "text-[#F1F5F9]",
+                rootBox: "w-full",
+                alert: "hidden",
+                alertText: "hidden",
+              },
+            }}
+          />
         </div>
       </div>
     </div>

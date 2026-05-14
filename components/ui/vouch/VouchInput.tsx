@@ -14,7 +14,8 @@ const VouchInput = React.forwardRef<HTMLInputElement, VouchInputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-sm font-medium text-[var(--text-secondary)]"
+            className="text-sm font-medium"
+            style={{ color: "var(--text-secondary)", fontSize: 13, fontWeight: 500 }}
           >
             {label}
           </label>
@@ -23,31 +24,34 @@ const VouchInput = React.forwardRef<HTMLInputElement, VouchInputProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            "w-full px-3 py-2 text-sm rounded-vouch-sm",
+            "w-full px-3 py-2 text-sm",
             "text-[var(--text-primary)]",
-            "placeholder:text-[var(--text-muted)]",
             "outline-none",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             className
           )}
           style={{
             height: "46px",
-            background: "var(--surface-raised)",
+            background: "var(--bg-elevated)",
             border: error
               ? "1px solid var(--warning)"
-              : "1px solid rgba(148, 163, 184, 0.12)",
-            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+              : "1px solid var(--border-subtle)",
+            borderRadius: "10px",
+            fontSize: "14px",
+            color: "var(--text-primary)",
+            transition: "all 0.2s ease",
             ...style,
           }}
+          placeholder={props.placeholder}
           onFocus={(e) => {
-            e.currentTarget.style.borderColor = "var(--accent)"
-            e.currentTarget.style.boxShadow = "0 0 0 3px rgba(99, 102, 241, 0.15)"
+            e.currentTarget.style.borderColor = "var(--border-focus)"
+            e.currentTarget.style.boxShadow = "0 0 0 3px rgba(99, 102, 241, 0.12)"
             props.onFocus?.(e)
           }}
           onBlur={(e) => {
             e.currentTarget.style.borderColor = error
               ? "var(--warning)"
-              : "rgba(148, 163, 184, 0.12)"
+              : "var(--border-subtle)"
             e.currentTarget.style.boxShadow = ""
             props.onBlur?.(e)
           }}

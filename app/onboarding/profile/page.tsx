@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useUser } from "@clerk/nextjs"
-import { Upload, X, AlertTriangle, CheckCircle } from "lucide-react"
+import { Upload, X, AlertTriangle, CheckCircle, Camera } from "lucide-react"
 import Image from "next/image"
 import { VouchButton } from "@/components/ui/vouch"
 import { toast } from "@/components/ui/vouch"
@@ -60,14 +60,14 @@ function StyledInput({
 
   return (
     <div className="flex flex-col gap-1.5 w-full">
-      <label className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+      <label className="text-sm font-medium" style={{ color: "var(--text-secondary)", fontSize: 13, fontWeight: 500 }}>
         {label}
       </label>
       <div className="relative flex items-center">
         {prefix && (
           <span
             className="absolute left-3 text-sm select-none pointer-events-none"
-            style={{ color: "var(--text-muted)", whiteSpace: "nowrap" }}
+            style={{ color: "var(--text-tertiary)", whiteSpace: "nowrap" }}
           >
             {prefix}
           </span>
@@ -75,20 +75,22 @@ function StyledInput({
         <input
           ref={ref as React.Ref<HTMLInputElement>}
           placeholder={placeholder}
-          className="w-full py-2 text-sm rounded-lg placeholder:text-[var(--text-muted)] outline-none"
+          className="w-full py-2 text-sm placeholder:text-[var(--text-tertiary)] outline-none"
           style={{
             height: 46,
             paddingLeft: prefix ? "calc(8.5ch + 12px)" : 12,
             paddingRight: 12,
-            background: "var(--surface-raised)",
+            background: "var(--bg-elevated)",
             border: error
               ? "1px solid var(--warning)"
               : focused
-              ? "1px solid var(--accent)"
-              : "1px solid rgba(148,163,184,0.12)",
-            boxShadow: focused ? "0 0 0 3px rgba(99,102,241,0.15)" : "none",
+              ? "1px solid var(--border-focus)"
+              : "1px solid var(--border-subtle)",
+            borderRadius: "10px",
+            boxShadow: focused ? "0 0 0 3px rgba(99,102,241,0.12)" : "none",
             color: "var(--text-primary)",
-            transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)",
+            fontSize: 14,
+            transition: "all 0.2s ease",
           }}
           onFocus={(e) => {
             setFocused(true)
@@ -117,20 +119,34 @@ export default function OnboardingProfilePage() {
   const { userType, setProfile } = useOnboardingStore()
 
   const [avatarUpload, setAvatarUpload] = useState<UploadState>(emptyUpload)
+  const [avatarPreview, setAvatarPreview] = useState<string>("")
+  const [isHoveringAvatar, setIsHoveringAvatar] = useState(false)
   const [resumeUpload, setResumeUpload] = useState<UploadState>(emptyUpload)
   const [isDraggingResume, setIsDraggingResume] = useState(false)
+  const [isHoveringResume, setIsHoveringResume] = useState(false)
 
   const avatarInputRef = useRef<HTMLInputElement>(null)
   const resumeInputRef = useRef<HTMLInputElement>(null)
 
+  // Task 15: Animated progress bar
+  const progressPct = Math.round(((CURRENT_STEP - 1) / STEP_COUNT) * 100)
+  const [barWidth, setBarWidth] = useState(0)
+  useEffect(() => {
+    const timer = setTimeout(() => setBarWidth(progressPct), 100)
+    return () => clearTimeout(timer)
+  }, [progressPct])
+
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isValid },
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     mode: "onChange",
   })
+
+  const fullNameValue = watch("fullName") ?? ""
 
   const uploadToSupabase = async (
     bucket: string,
@@ -157,9 +173,16 @@ export default function OnboardingProfilePage() {
     return urlData.publicUrl
   }
 
+  // Task 14: Avatar with local preview
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+
+    // Immediate local preview
+    const reader = new FileReader()
+    reader.onloadend = () => setAvatarPreview(reader.result as string)
+    reader.readAsDataURL(file)
+
     if (file.size > 5 * 1024 * 1024) { toast.error("Avatar must be under 5MB"); return }
     if (!user?.id) { toast.error("Not authenticated"); return }
     try {
@@ -196,8 +219,6 @@ export default function OnboardingProfilePage() {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
   }
 
-  const progressPct = Math.round(((CURRENT_STEP - 1) / STEP_COUNT) * 100)
-
   const onSubmit = (values: ProfileFormValues) => {
     const rawLinkedin = (values.linkedinUsername ?? "").trim()
     let linkedinUrl = ""
@@ -218,33 +239,39 @@ export default function OnboardingProfilePage() {
 
   const showResume = userType === "seeker" || userType === "both"
 
+  // Get initials for avatar placeholder
+  const getInitials = (name: string) => {
+    const parts = name.trim().split(" ")
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+    return name.slice(0, 2).toUpperCase()
+  }
+
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-start px-6 py-12"
-      style={{ backgroundColor: "var(--page-bg)" }}
+      style={{ backgroundColor: "var(--bg-base)" }}
     >
-      {/* Animated progress bar */}
-      <div className="w-full max-w-[640px] mb-8">
-        <div className="flex items-center justify-between mb-1.5">
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Step {CURRENT_STEP} of {STEP_COUNT}</p>
-          <p className="text-xs font-medium" style={{ color: "var(--accent)" }}>{progressPct}%</p>
+      {/* Task 15: Animated progress bar */}
+      <div className="w-full max-w-[640px] mb-4 mt-4">
+        <div className="flex items-center justify-between mb-2">
+          <span style={{ fontSize: 12, color: "var(--text-tertiary)" }}>Step {CURRENT_STEP} of {STEP_COUNT}</span>
+          <span style={{ fontSize: 12, fontWeight: 500, color: "var(--text-accent)" }}>{barWidth}%</span>
         </div>
-        <div
-          className="w-full rounded-full overflow-hidden"
-          style={{ height: 4, background: "var(--surface-raised)" }}
-        >
-          <div
-            className="h-full rounded-full"
-            style={{
-              width: `${progressPct}%`,
-              background: "linear-gradient(90deg, var(--accent), var(--accent-hover))",
-              transition: "width 0.5s ease",
-            }}
-          />
+        <div className="progress-track">
+          <div className="progress-fill" style={{ width: `${barWidth}%` }} />
         </div>
       </div>
 
-      <div className="w-full max-w-[640px]">
+      {/* Task 2: Card container */}
+      <div
+        className="w-full max-w-[640px] mt-4"
+        style={{
+          background: "var(--bg-surface)",
+          border: "0.5px solid var(--border-subtle)",
+          borderRadius: "14px",
+          padding: "32px",
+        }}
+      >
         {/* Back link */}
         <Link
           href="/onboarding/role"
@@ -274,25 +301,56 @@ export default function OnboardingProfilePage() {
             inputProps={register("fullName")}
           />
 
-          {/* Profile Photo */}
+          {/* Task 14: Profile Photo with preview */}
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+            <span className="text-sm font-medium" style={{ color: "var(--text-secondary)", fontSize: 13, fontWeight: 500 }}>
               Profile Photo
             </span>
             <div className="flex items-center gap-4">
+              {/* Avatar circle */}
               <div
-                className="relative cursor-pointer rounded-full overflow-hidden border-2 border-dashed flex items-center justify-center overflow-hidden transition-all duration-200 hover:border-[var(--accent)]"
-                style={{ width: 80, height: 80, borderColor: "rgba(148,163,184,0.2)", flexShrink: 0 }}
+                className="relative cursor-pointer rounded-full overflow-hidden flex items-center justify-center"
+                style={{
+                  width: 80,
+                  height: 80,
+                  border: "2px dashed var(--border-subtle)",
+                  flexShrink: 0,
+                  borderRadius: "50%",
+                }}
                 onClick={() => avatarInputRef.current?.click()}
+                onMouseEnter={() => setIsHoveringAvatar(true)}
+                onMouseLeave={() => setIsHoveringAvatar(false)}
               >
-                {avatarUpload.url ? (
-                  <Image src={avatarUpload.url} alt="Profile" fill className="object-cover rounded-full" />
+                {avatarPreview || avatarUpload.url ? (
+                  <>
+                    <Image
+                      src={avatarPreview || avatarUpload.url}
+                      alt="Profile"
+                      fill
+                      className="object-cover rounded-full"
+                    />
+                    {isHoveringAvatar && (
+                      <div
+                        className="absolute inset-0 flex items-center justify-center rounded-full"
+                        style={{ background: "rgba(0,0,0,0.5)" }}
+                      >
+                        <Camera size={20} style={{ color: "white" }} />
+                      </div>
+                    )}
+                  </>
                 ) : avatarUpload.uploading ? (
                   <div className="text-xs text-center" style={{ color: "var(--text-secondary)" }}>
                     {avatarUpload.progress}%
                   </div>
+                ) : fullNameValue.trim().length >= 2 ? (
+                  <span
+                    className="font-bold text-sm text-white"
+                    style={{ background: "linear-gradient(135deg, #6366F1, #4F46E5)", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%" }}
+                  >
+                    {getInitials(fullNameValue)}
+                  </span>
                 ) : (
-                  <Upload size={24} style={{ color: "var(--text-secondary)" }} />
+                  <Upload size={24} style={{ color: "var(--text-tertiary)" }} />
                 )}
               </div>
               <div>
@@ -302,9 +360,9 @@ export default function OnboardingProfilePage() {
                   style={{ color: "var(--accent)" }}
                   onClick={() => avatarInputRef.current?.click()}
                 >
-                  {avatarUpload.url ? "Change photo" : "Upload photo"}
+                  {avatarPreview || avatarUpload.url ? "Change photo" : "Upload photo"}
                 </button>
-                <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+                <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
                   JPG, PNG, GIF — max 5MB
                 </p>
               </div>
@@ -328,10 +386,10 @@ export default function OnboardingProfilePage() {
             inputProps={register("location")}
           />
 
-          {/* Resume Upload */}
+          {/* Task 13: Resume Upload with hover states */}
           {showResume && (
             <div className="flex flex-col gap-2">
-              <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+              <span className="text-sm font-medium" style={{ color: "var(--text-secondary)", fontSize: 13, fontWeight: 500 }}>
                 Resume
               </span>
               {resumeUpload.url ? (
@@ -340,6 +398,7 @@ export default function OnboardingProfilePage() {
                   style={{
                     background: "rgba(45,212,191,0.05)",
                     borderColor: "var(--accent-secondary)",
+                    borderRadius: "12px",
                   }}
                 >
                   <div className="flex items-center gap-3">
@@ -364,27 +423,48 @@ export default function OnboardingProfilePage() {
                 </div>
               ) : (
                 <div
-                  className="flex flex-col items-center justify-center gap-3 p-8 rounded-xl border-2 border-dashed cursor-pointer transition-all duration-200"
+                  className="flex flex-col items-center justify-center gap-3 p-8 cursor-pointer transition-all duration-200 relative overflow-hidden"
                   style={{
-                    borderColor: isDraggingResume ? "var(--accent)" : "rgba(148,163,184,0.2)",
-                    background: isDraggingResume ? "rgba(99,102,241,0.05)" : "transparent",
+                    background: isDraggingResume ? "rgba(99,102,241,0.06)" : isHoveringResume ? "var(--bg-hover)" : "var(--bg-elevated)",
+                    borderColor: isDraggingResume ? "var(--border-focus)" : isHoveringResume ? "var(--border-default)" : "var(--border-subtle)",
+                    borderStyle: "dashed",
+                    borderWidth: "1px",
+                    borderRadius: "12px",
                   }}
                   onDragOver={(e) => { e.preventDefault(); setIsDraggingResume(true) }}
                   onDragLeave={() => setIsDraggingResume(false)}
                   onDrop={handleResumeDrop}
                   onClick={() => resumeInputRef.current?.click()}
+                  onMouseEnter={() => setIsHoveringResume(true)}
+                  onMouseLeave={() => setIsHoveringResume(false)}
                 >
                   {resumeUpload.uploading ? (
-                    <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                      Uploading... {resumeUpload.progress}%
-                    </div>
+                    <>
+                      <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                        Uploading... {resumeUpload.progress}%
+                      </div>
+                      {/* Progress bar */}
+                      <div
+                        className="absolute bottom-0 left-0 right-0"
+                        style={{ height: 3, background: "var(--border-subtle)" }}
+                      >
+                        <div
+                          style={{
+                            height: "100%",
+                            background: "linear-gradient(90deg, #6366F1, #818CF8)",
+                            width: `${resumeUpload.progress}%`,
+                            transition: "width 0.3s ease",
+                          }}
+                        />
+                      </div>
+                    </>
                   ) : (
                     <>
                       <Upload
                         size={32}
                         style={{
-                          color: "var(--text-secondary)",
-                          transform: isDraggingResume ? "translateY(-4px)" : "translateY(0)",
+                          color: "var(--text-tertiary)",
+                          transform: isDraggingResume || isHoveringResume ? "translateY(-4px)" : "translateY(0)",
                           transition: "transform 0.2s ease",
                         }}
                       />
@@ -392,7 +472,7 @@ export default function OnboardingProfilePage() {
                         <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
                           Drag &amp; drop your resume here
                         </p>
-                        <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+                        <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
                           PDF only — max 10MB
                         </p>
                       </div>
