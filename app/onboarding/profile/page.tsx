@@ -8,20 +8,15 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useUser } from "@clerk/nextjs"
 import { Upload, X, AlertTriangle, CheckCircle } from "lucide-react"
-import { VouchButton, VouchAvatar } from "@/components/ui/vouch"
+import Image from "next/image"
+import { VouchButton } from "@/components/ui/vouch"
 import { toast } from "@/components/ui/vouch"
 import { useOnboardingStore } from "@/lib/onboarding-store"
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
 
 const profileSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
-  linkedinUsername: z
-    .string()
-    .optional()
-    .refine(
-      (val) => !val || val === "" || /^[a-zA-Z0-9\-_]+$/.test(val),
-      { message: "Enter just your LinkedIn username (letters, numbers, hyphens)" }
-    ),
+  linkedinUsername: z.string().optional(),
   location: z.string().optional(),
 })
 
@@ -144,14 +139,14 @@ export default function OnboardingProfilePage() {
     setState: (s: UploadState) => void
   ): Promise<string> => {
     setState({ uploading: true, progress: 10, url: "", fileName: file.name, fileSize: file.size })
-    const { data, error } = await supabase.storage
+    const { data, error } = await getSupabase().storage
       .from(bucket)
       .upload(path, file, { upsert: true })
     if (error) {
       setState(emptyUpload)
       throw error
     }
-    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(data.path)
+    const { data: urlData } = getSupabase().storage.from(bucket).getPublicUrl(data.path)
     setState({
       uploading: false,
       progress: 100,
@@ -204,9 +199,13 @@ export default function OnboardingProfilePage() {
   const progressPct = Math.round(((CURRENT_STEP - 1) / STEP_COUNT) * 100)
 
   const onSubmit = (values: ProfileFormValues) => {
-    const linkedinUrl = values.linkedinUsername
-      ? `https://www.linkedin.com/in/${values.linkedinUsername}`
-      : ""
+    const rawLinkedin = (values.linkedinUsername ?? "").trim()
+    let linkedinUrl = ""
+    if (rawLinkedin) {
+      const match = rawLinkedin.match(/linkedin\.com\/in\/([^/?#]+)/)
+      const username = match ? match[1].replace(/\/$/, "") : rawLinkedin.replace(/^\/|\/$/g, "")
+      linkedinUrl = "https://www.linkedin.com/in/" + username
+    }
     setProfile({
       fullName: values.fullName,
       linkedinUrl,
@@ -282,12 +281,12 @@ export default function OnboardingProfilePage() {
             </span>
             <div className="flex items-center gap-4">
               <div
-                className="relative cursor-pointer rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden transition-all duration-200 hover:border-[var(--accent)]"
+                className="relative cursor-pointer rounded-full overflow-hidden border-2 border-dashed flex items-center justify-center overflow-hidden transition-all duration-200 hover:border-[var(--accent)]"
                 style={{ width: 80, height: 80, borderColor: "rgba(148,163,184,0.2)", flexShrink: 0 }}
                 onClick={() => avatarInputRef.current?.click()}
               >
                 {avatarUpload.url ? (
-                  <VouchAvatar src={avatarUpload.url} size="lg" />
+                  <Image src={avatarUpload.url} alt="Profile" fill className="object-cover rounded-full" />
                 ) : avatarUpload.uploading ? (
                   <div className="text-xs text-center" style={{ color: "var(--text-secondary)" }}>
                     {avatarUpload.progress}%
