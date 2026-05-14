@@ -9,29 +9,29 @@ export default function SignInPage() {
     >
       {/* Left panel */}
       <div
-        className="hidden lg:flex flex-col justify-center px-16 w-1/2 relative overflow-hidden"
+        className="hidden lg:flex flex-col justify-center px-20 w-1/2 relative overflow-hidden min-h-screen"
         style={{ backgroundColor: "var(--bg-surface)", borderRight: "1px solid var(--border-subtle)" }}
       >
         <div className="orb-purple" style={{ opacity: 0.5 }} />
         <div className="orb-teal" style={{ opacity: 0.4 }} />
         <div className="noise-overlay" />
         <div className="relative z-10">
-          <div className="mb-12">
+          <div className="mb-16">
             <span style={{ fontSize: 18, fontWeight: 600, color: "var(--text-primary)" }}>
               vouch<span style={{ color: "var(--text-accent)" }}>.</span>
             </span>
           </div>
           <h1
-            className="text-5xl font-bold leading-tight mb-6"
-            style={{ fontFamily: "var(--font-serif)", color: "var(--text-primary)" }}
+            className="font-bold leading-tight mb-6"
+            style={{ fontSize: "clamp(40px, 5vw, 72px)", letterSpacing: "-0.02em", lineHeight: 1.05, fontFamily: "var(--font-serif)", color: "var(--text-primary)" }}
           >
             Get Referred.<br />
-            <span style={{ color: "var(--accent)" }}>Get Hired.</span>
+            <span style={{ background: "linear-gradient(135deg, #818CF8, #6EE7B7)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Get Hired.</span>
           </h1>
           <p className="text-lg mb-16" style={{ color: "var(--text-secondary)" }}>
             Connect with company insiders who can get your resume to the top of the pile.
           </p>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-8">
             {[
               { Icon: Shield, title: "Verified Referrers", desc: "Every referrer is verified with work email authentication" },
               { Icon: Zap, title: "Fast Results", desc: "Get your referral submitted within 48 hours or full refund" },

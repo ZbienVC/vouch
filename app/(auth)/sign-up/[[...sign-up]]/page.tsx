@@ -9,21 +9,21 @@ export default function SignUpPage() {
     >
       {/* Left panel */}
       <div
-        className="hidden lg:flex flex-col justify-center px-16 w-1/2 relative overflow-hidden"
+        className="hidden lg:flex flex-col justify-center px-20 w-1/2 relative overflow-hidden min-h-screen"
         style={{ backgroundColor: "var(--bg-surface)", borderRight: "1px solid var(--border-subtle)" }}
       >
         <div className="orb-purple" style={{ opacity: 0.5 }} />
         <div className="orb-teal" style={{ opacity: 0.4 }} />
         <div className="noise-overlay" />
         <div className="relative z-10">
-          <div className="mb-12">
+          <div className="mb-16">
             <span style={{ fontSize: 18, fontWeight: 600, color: "var(--text-primary)" }}>
               vouch<span style={{ color: "var(--text-accent)" }}>.</span>
             </span>
           </div>
           <h1
-            className="text-5xl font-bold leading-tight mb-6"
-            style={{ fontFamily: "var(--font-serif)", color: "var(--text-primary)" }}
+            className="font-bold leading-tight mb-6"
+            style={{ fontSize: "clamp(40px, 5vw, 72px)", letterSpacing: "-0.02em", lineHeight: 1.05, fontFamily: "var(--font-serif)", color: "var(--text-primary)" }}
           >
             Join the<br />
             <span style={{ color: "var(--accent)" }}>Referral Network.</span>
@@ -31,7 +31,7 @@ export default function SignUpPage() {
           <p className="text-lg mb-16" style={{ color: "var(--text-secondary)" }}>
             Whether you want referrals or want to give them — Vouch makes it seamless.
           </p>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-8">
             {[
               { Icon: Users, title: "Find the Right Insider", desc: "Browse referrers at thousands of top companies" },
               { Icon: Zap, title: "Earn by Referring", desc: "Monetize your network and help great candidates" },
