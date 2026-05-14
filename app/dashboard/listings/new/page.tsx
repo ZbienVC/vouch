@@ -34,7 +34,7 @@ const listingSchema = z.object({
   companyName: z.string().min(1, "Company is required"),
   roleTypes: z.array(z.string()).min(1, "Select at least one role type"),
   departments: z.string().optional(),
-  price: z.number({ invalid_type_error: "Price must be a number" }).min(25, "Minimum price is $25"),
+  price: z.number().min(25, "Minimum price is $25"),
   description: z
     .string()
     .min(50, "Description must be at least 50 characters")
@@ -107,11 +107,11 @@ function CreateListingPageInner({ referrerCompany, isVerified }: CreateListingPa
         throw new Error(err.error ?? "Failed to create listing")
       }
 
-      toast("Listing published!", "success")
+      toast.success("Listing published!")
       router.push("/dashboard/listings")
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong"
-      toast(msg, "error")
+      toast.error(msg)
     } finally {
       setSubmitting(false)
     }

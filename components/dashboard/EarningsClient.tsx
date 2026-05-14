@@ -251,7 +251,7 @@ export default function EarningsClient({
                   color: "#F0F0FF",
                   fontSize: 13,
                 }}
-                formatter={(value: number) => [`$${value}`, "Earnings"]}
+                formatter={(value) => [`$${value ?? 0}`, "Earnings"]}
                 cursor={{ fill: "#6C63FF10" }}
               />
               <Bar

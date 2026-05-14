@@ -34,12 +34,12 @@ export default function MyListingsClient({ initialListings }: MyListingsClientPr
         body: JSON.stringify({ isActive: newActive }),
       })
       if (!res.ok) throw new Error("Failed to update listing")
-      toast(newActive ? "Listing activated" : "Listing paused", "success")
+      toast.success(newActive ? "Listing activated" : "Listing paused")
     } catch {
       setListings((prev) =>
         prev.map((l) => (l.id === id ? { ...l, isActive: !newActive } : l))
       )
-      toast("Failed to update listing", "error")
+      toast.error("Failed to update listing")
     }
   }
 
@@ -49,12 +49,12 @@ export default function MyListingsClient({ initialListings }: MyListingsClientPr
     try {
       const res = await fetch(`/api/listings/${id}`, { method: "DELETE" })
       if (!res.ok) throw new Error("Failed to delete listing")
-      toast("Listing deleted", "success")
+      toast.success("Listing deleted")
     } catch {
       if (backup) {
         setListings((prev) => [...prev, backup].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)))
       }
-      toast("Failed to delete listing", "error")
+      toast.error("Failed to delete listing")
     }
   }
 

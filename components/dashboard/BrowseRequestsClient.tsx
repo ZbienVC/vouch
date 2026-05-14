@@ -84,12 +84,12 @@ function RequestDetailModal({ request, onClose }: RequestDetailModalProps) {
         throw new Error(err.error ?? "Failed to create deal")
       }
       const data = await res.json() as { dealId: string }
-      toast("Deal accepted! Redirecting...", "success")
+      toast.success("Deal accepted! Redirecting...")
       onClose()
       router.push(`/deals/${data.dealId}`)
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong"
-      toast(msg, "error")
+      toast.error(msg)
     } finally {
       setSubmitting(false)
     }
