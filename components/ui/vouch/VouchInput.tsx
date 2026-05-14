@@ -1,4 +1,4 @@
-﻿import * as React from "react"
+import * as React from "react"
 import { cn } from "@/lib/utils"
 
 export interface VouchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -14,7 +14,7 @@ const VouchInput = React.forwardRef<HTMLInputElement, VouchInputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-sm font-medium text-[#8888AA]"
+            className="text-sm font-medium text-[var(--text-secondary)]"
           >
             {label}
           </label>
@@ -24,18 +24,18 @@ const VouchInput = React.forwardRef<HTMLInputElement, VouchInputProps>(
           id={inputId}
           className={cn(
             "w-full h-10 px-3 py-2 text-sm rounded-vouch-sm",
-            "bg-[#111118] border border-[#2A2A38] text-[#F0F0FF]",
-            "placeholder:text-[#55556A]",
+            "bg-[var(--surface)] border border-[var(--border)] text-[var(--text-primary)]",
+            "placeholder:text-[var(--text-muted)]",
             "outline-none transition-all duration-200",
-            "focus:border-[#6C63FF] focus:ring-2 focus:ring-[#6C63FF]/20",
+            "focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20",
             "disabled:opacity-50 disabled:cursor-not-allowed",
-            error && "border-[#FF4D6A] focus:border-[#FF4D6A] focus:ring-[#FF4D6A]/20",
+            error && "border-[var(--error)] focus:border-[var(--error)] focus:ring-[var(--error)]/20",
             className
           )}
           {...props}
         />
         {error && (
-          <p className="text-xs text-[#FF4D6A]">{error}</p>
+          <p className="text-xs text-[var(--error)]">{error}</p>
         )}
       </div>
     )

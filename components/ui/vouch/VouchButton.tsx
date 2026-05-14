@@ -1,20 +1,20 @@
-﻿import * as React from "react"
+import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6C63FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0F]",
+  "inline-flex items-center justify-center font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--page-bg)]",
   {
     variants: {
       variant: {
         primary:
-          "bg-[#6C63FF] text-white hover:bg-[#7C74FF] active:scale-[0.98]",
+          "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] active:scale-[0.98]",
         secondary:
-          "bg-transparent text-[#F0F0FF] border border-[#2A2A38] hover:border-[#6C63FF] hover:text-[#6C63FF]",
+          "bg-transparent text-[var(--text-primary)] border border-[var(--border)] hover:border-[var(--accent)] hover:text-[var(--accent)]",
         ghost:
-          "bg-transparent text-[#8888AA] hover:text-[#F0F0FF] hover:bg-[#1A1A24]",
+          "bg-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-raised)]",
         destructive:
-          "bg-[#FF4D6A] text-white hover:bg-[#ff6680] active:scale-[0.98]",
+          "bg-[var(--error)] text-white hover:opacity-90 active:scale-[0.98]",
       },
       size: {
         sm: "h-8 px-3 text-sm rounded-vouch-sm gap-1.5",

@@ -89,7 +89,7 @@ export default function Sidebar({ userType, userName, userEmail, avatarUrl }: Si
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
                 active
                   ? "bg-[var(--accent)]/10 text-[var(--accent)] border-l-4 border-[var(--accent)] pl-[calc(0.75rem-4px)]"
-                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[#1A1A24]",
+                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-raised)]",
               ].join(" ")}
             >
               <Icon size={18} />
@@ -110,7 +110,7 @@ export default function Sidebar({ userType, userName, userEmail, avatarUrl }: Si
         </div>
         <button
           onClick={handleSignOut}
-          className="w-full text-sm text-[var(--text-secondary)] hover:text-[#FF4D6A] transition-colors text-left px-1 py-1"
+          className="w-full text-sm text-[var(--text-secondary)] hover:text-[var(--error)] transition-colors text-left px-1 py-1"
         >
           Sign Out
         </button>

@@ -7,10 +7,10 @@ const VouchSkeleton = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTML
       <div
         ref={ref}
         className={cn(
-          "rounded-vouch-sm bg-[#1A1A24] animate-pulse",
+          "rounded-vouch-sm bg-[var(--surface-raised)] animate-pulse",
           "relative overflow-hidden",
           "after:absolute after:inset-0 after:translate-x-[-100%]",
-          "after:bg-gradient-to-r after:from-transparent after:via-[#2A2A38]/40 after:to-transparent",
+          "after:bg-gradient-to-r after:from-transparent after:via-[var(--surface-high)]/40 after:to-transparent",
           "after:animate-[shimmer_2s_infinite]",
           className
         )}

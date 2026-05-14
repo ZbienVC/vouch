@@ -54,7 +54,7 @@ const VouchAvatar = React.forwardRef<HTMLDivElement, VouchAvatarProps>(
               text
             )}
             style={{
-              background: "linear-gradient(135deg, #6C63FF 0%, #00D4AA 100%)",
+              background: "linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%)",
             }}
           >
             {getInitials(name)}

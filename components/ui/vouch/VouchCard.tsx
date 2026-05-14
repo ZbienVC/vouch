@@ -1,4 +1,4 @@
-﻿import * as React from "react"
+import * as React from "react"
 import { cn } from "@/lib/utils"
 
 export interface VouchCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -12,9 +12,9 @@ const VouchCard = React.forwardRef<HTMLDivElement, VouchCardProps>(
       <div
         ref={ref}
         className={cn(
-          "rounded-vouch border border-[#2A2A38] p-6 transition-all duration-200",
-          elevated ? "bg-[#1A1A24]" : "bg-[#111118]",
-          glow && "shadow-[0_0_24px_rgba(108,99,255,0.15)]",
+          "rounded-vouch border border-[var(--border)] p-6 transition-all duration-200",
+          elevated ? "bg-[var(--surface-raised)]" : "bg-[var(--surface)]",
+          glow && "shadow-[0_0_24px_rgba(99,102,241,0.15)]",
           className
         )}
         {...props}
@@ -37,7 +37,7 @@ const VouchCardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttribut
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn("font-display text-lg font-semibold text-[#F0F0FF]", className)}
+      className={cn("font-display text-lg font-semibold text-[var(--text-primary)]", className)}
       {...props}
     />
   )
@@ -46,7 +46,7 @@ VouchCardTitle.displayName = "VouchCardTitle"
 
 const VouchCardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("text-[#8888AA] text-sm", className)} {...props} />
+    <div ref={ref} className={cn("text-[var(--text-secondary)] text-sm", className)} {...props} />
   )
 )
 VouchCardContent.displayName = "VouchCardContent"
