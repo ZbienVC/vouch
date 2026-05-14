@@ -62,7 +62,7 @@ export default function SignUpPage() {
               vouch<span style={{ color: "var(--text-accent)" }}>.</span>
             </span>
           </div>
-          <div className="mb-6">
+          <div className="mb-4">
             <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>
               Create your account
             </h2>
@@ -86,8 +86,8 @@ export default function SignUpPage() {
               },
               elements: {
                 card: "bg-transparent shadow-none border-none",
-                headerTitle: "text-xl font-semibold text-[#F1F5F9]",
-                headerSubtitle: "text-[#94A3B8]",
+                headerTitle: "hidden",
+                headerSubtitle: "hidden",
                 formButtonPrimary: "bg-gradient-to-r from-[#6366F1] to-[#4F46E5] hover:opacity-90 transition-opacity",
                 socialButtonsBlockButton: "bg-[#131E33] border border-[rgba(148,163,184,0.18)] text-[#F1F5F9] h-[46px] rounded-[10px] hover:bg-[#1A2744]",
                 dividerLine: "bg-[rgba(148,163,184,0.10)] h-px",
