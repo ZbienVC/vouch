@@ -1,10 +1,10 @@
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "library"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum UserType {
@@ -75,16 +75,16 @@ model User {
 
   referrerProfile ReferrerProfile?
   seekerProfile   SeekerProfile?
-  dealsAsSeeker   Deal[]         @relation("SeekerDeals")
-  dealsAsReferrer Deal[]         @relation("ReferrerDeals")
+  dealsAsSeeker   Deal[]           @relation("SeekerDeals")
+  dealsAsReferrer Deal[]           @relation("ReferrerDeals")
   proofs          ReferralProof[]
   confirmations   Confirmation[]
   disputes        Dispute[]
-  reviews         Review[]       @relation("ReviewerReviews")
-  reviewsReceived Review[]       @relation("RevieweeReviews")
+  reviews         Review[]         @relation("ReviewerReviews")
+  reviewsReceived Review[]         @relation("RevieweeReviews")
   notifications   Notification[]
-  conversations1  Conversation[] @relation("Participant1")
-  conversations2  Conversation[] @relation("Participant2")
+  conversations1  Conversation[]   @relation("Participant1")
+  conversations2  Conversation[]   @relation("Participant2")
 
   @@map("users")
 }
@@ -160,23 +160,23 @@ model Request {
 }
 
 model Deal {
-  id                    String         @id @default(uuid())
-  requestId             String?        @map("request_id")
-  request               Request?       @relation(fields: [requestId], references: [id])
-  listingId             String?        @map("listing_id")
-  listing               Listing?       @relation(fields: [listingId], references: [id])
-  seekerId              String         @map("seeker_id")
-  seeker                User           @relation("SeekerDeals", fields: [seekerId], references: [id])
-  referrerId            String         @map("referrer_id")
-  referrer              User           @relation("ReferrerDeals", fields: [referrerId], references: [id])
-  agreedPriceCents      Int            @map("agreed_price_cents")
-  platformFeeCents      Int            @map("platform_fee_cents")
-  referrerPayoutCents   Int            @map("referrer_payout_cents")
-  status                DealStatus     @default(pending_payment)
-  stripePaymentIntentId String?        @map("stripe_payment_intent_id")
-  coinbaseChargeId      String?        @map("coinbase_charge_id")
-  createdAt             DateTime       @default(now()) @map("created_at")
-  completedAt           DateTime?      @map("completed_at")
+  id                    String          @id @default(uuid())
+  requestId             String?         @map("request_id")
+  request               Request?        @relation(fields: [requestId], references: [id])
+  listingId             String?         @map("listing_id")
+  listing               Listing?        @relation(fields: [listingId], references: [id])
+  seekerId              String          @map("seeker_id")
+  seeker                User            @relation("SeekerDeals", fields: [seekerId], references: [id])
+  referrerId            String          @map("referrer_id")
+  referrer              User            @relation("ReferrerDeals", fields: [referrerId], references: [id])
+  agreedPriceCents      Int             @map("agreed_price_cents")
+  platformFeeCents      Int             @map("platform_fee_cents")
+  referrerPayoutCents   Int             @map("referrer_payout_cents")
+  status                DealStatus      @default(pending_payment)
+  stripePaymentIntentId String?         @map("stripe_payment_intent_id")
+  coinbaseChargeId      String?         @map("coinbase_charge_id")
+  createdAt             DateTime        @default(now()) @map("created_at")
+  completedAt           DateTime?       @map("completed_at")
   proofs                ReferralProof[]
   confirmations         Confirmation[]
   disputes              Dispute[]

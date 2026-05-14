@@ -1,69 +1,154 @@
-export default function DashboardPage() {
-  return (
-    <div
-      style={{ backgroundColor: "#0A0A0F", minHeight: "100vh" }}
-      className="flex items-center justify-center px-6"
-    >
-      <div className="text-center max-w-lg">
-        <div className="mb-8">
-          <span
-            className="font-display text-2xl font-bold"
-            style={{ color: "#F0F0FF" }}
-          >
-            vouch<span style={{ color: "#6C63FF" }}>.</span>
-          </span>
-        </div>
+﻿import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
+import prisma from "@/lib/prisma"
+import SeekerDashboard from "@/components/dashboard/SeekerDashboard"
+import type { ReferrerCardData } from "@/components/referrers/ReferrerCard"
 
-        <div
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-vouch-pill text-xs font-medium mb-6"
-          style={{
-            backgroundColor: "#00D4AA20",
-            border: "1px solid #00D4AA40",
-            color: "#00D4AA",
-          }}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#00D4AA]" />
-          Authenticated
-        </div>
+interface ActivityItem {
+  id: string
+  icon: "deal" | "complete" | "message"
+  description: string
+  timeAgo: string
+}
 
-        <h1
-          className="font-display text-4xl font-bold mb-4"
-          style={{ color: "#F0F0FF" }}
-        >
-          Phase 3: Dashboard
-        </h1>
-        <p
-          className="text-base mb-8"
-          style={{ color: "#8888AA" }}
-        >
-          The full dashboard experience is coming in Phase 3 — listings,
-          requests, deals, messages, and earnings.
-        </p>
+function timeAgo(date: Date): string {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
+  if (seconds < 60) return "just now"
+  const minutes = Math.floor(seconds / 60)
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  const days = Math.floor(hours / 24)
+  return `${days}d ago`
+}
 
-        <div
-          className="p-6 rounded-vouch text-left space-y-2"
-          style={{
-            backgroundColor: "#111118",
-            border: "1px solid #2A2A38",
-          }}
-        >
-          <p className="text-sm font-mono" style={{ color: "#55556A" }}>
-            {"// TODO: Phase 3"}
-          </p>
-          {[
-            "Browse referrer listings",
-            "Post referral requests",
-            "Manage active deals",
-            "Escrow & payments",
-            "Messaging (Stream Chat)",
-            "Earnings & payouts",
-          ].map((item) => (
-            <p key={item} className="text-sm font-mono" style={{ color: "#8888AA" }}>
-              — {item}
-            </p>
-          ))}
+export default async function DashboardPage() {
+  const { userId } = await auth()
+
+  if (!userId) {
+    redirect("/sign-in")
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { clerkId: userId },
+    include: {
+      seekerProfile: true,
+      referrerProfile: true,
+    },
+  })
+
+  if (!user || !user.userType) {
+    redirect("/onboarding/role")
+  }
+
+  if (user.userType === "referrer") {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center space-y-3">
+          <h2 className="font-display text-2xl font-bold text-[var(--text-primary)]">
+            Referrer Dashboard
+          </h2>
+          <p className="text-[var(--text-secondary)]">Phase 4 — Coming soon</p>
         </div>
       </div>
-    </div>
+    )
+  }
+
+  if (!user.seekerProfile) {
+    redirect("/onboarding/role")
+  }
+
+  const [activeRequests, inProgressDeals, completedDeals, recentDeals] = await Promise.all([
+    prisma.request.count({
+      where: {
+        seekerId: user.seekerProfile.id,
+        status: "open",
+      },
+    }),
+    prisma.deal.count({
+      where: {
+        seekerId: user.id,
+        status: { in: ["paid", "referral_submitted"] },
+      },
+    }),
+    prisma.deal.count({
+      where: {
+        seekerId: user.id,
+        status: "completed",
+      },
+    }),
+    prisma.deal.findMany({
+      where: { seekerId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: {
+        referrer: { select: { fullName: true } },
+      },
+    }),
+  ])
+
+  const topListingsRaw = await prisma.listing.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: "desc" },
+    take: 3,
+    include: {
+      referrer: {
+        include: {
+          user: {
+            select: { fullName: true, avatarUrl: true },
+          },
+        },
+      },
+    },
+  })
+
+  const topListings: ReferrerCardData[] = topListingsRaw.map((l) => {
+    const fullName = l.referrer.user.fullName ?? "Unknown"
+    const parts = fullName.trim().split(/\s+/)
+    const firstName = parts[0] ?? "Unknown"
+    const lastInitial = parts.length > 1 ? parts[parts.length - 1].charAt(0) : ""
+    return {
+      id: l.referrer.id,
+      firstName,
+      lastInitial,
+      company: l.companyName,
+      jobTitle: l.referrer.jobTitle ?? "",
+      priceCents: l.priceCents,
+      avgRating: l.referrer.avgRating ? Number(l.referrer.avgRating) : null,
+      totalReferrals: l.referrer.totalReferrals,
+      isVerified: l.referrer.workEmailVerified,
+      avatarUrl: l.referrer.user.avatarUrl,
+    }
+  })
+
+  const recentActivity: ActivityItem[] = recentDeals.map((deal) => ({
+    id: deal.id,
+    icon:
+      deal.status === "completed"
+        ? "complete"
+        : deal.status === "paid" || deal.status === "referral_submitted"
+          ? "deal"
+          : "message",
+    description:
+      deal.status === "completed"
+        ? `Referral with ${deal.referrer.fullName ?? "a referrer"} completed`
+        : deal.status === "paid"
+          ? `Deal with ${deal.referrer.fullName ?? "a referrer"} payment confirmed`
+          : deal.status === "referral_submitted"
+            ? `${deal.referrer.fullName ?? "Referrer"} submitted your referral`
+            : `New deal started with ${deal.referrer.fullName ?? "a referrer"}`,
+    timeAgo: timeAgo(deal.createdAt),
+  }))
+
+  const firstName =
+    (user.fullName ?? user.email).trim().split(/\s+/)[0] ?? "there"
+
+  return (
+    <SeekerDashboard
+      firstName={firstName}
+      stats={{ activeRequests, inProgress: inProgressDeals, completed: completedDeals }}
+      topListings={topListings}
+      recentActivity={recentActivity}
+    />
   )
 }
