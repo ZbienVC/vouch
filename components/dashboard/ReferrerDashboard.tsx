@@ -11,7 +11,7 @@ import {
   FileText,
   ArrowUpRight,
 } from "lucide-react"
-import { VouchCard, VouchButton, VouchBadge, VouchAvatar } from "@/components/ui/vouch"
+import { VouchCard, VouchButton, VouchBadge } from "@/components/ui/vouch"
 
 interface ActivityItem {
   id: string

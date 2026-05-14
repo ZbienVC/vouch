@@ -1,7 +1,8 @@
-﻿import { auth } from "@clerk/nextjs/server"
+import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import prisma from "@/lib/prisma"
 import SeekerDashboard from "@/components/dashboard/SeekerDashboard"
+import ReferrerDashboard from "@/components/dashboard/ReferrerDashboard"
 import type { ReferrerCardData } from "@/components/referrers/ReferrerCard"
 
 interface ActivityItem {
@@ -41,19 +42,75 @@ export default async function DashboardPage() {
     redirect("/onboarding/role")
   }
 
+  const firstName =
+    (user.fullName ?? user.email).trim().split(/\s+/)[0] ?? "there"
+
+  // Referrer dashboard
   if (user.userType === "referrer") {
+    if (!user.referrerProfile) {
+      redirect("/onboarding/role")
+    }
+
+    const [activeListings, inProgressDeals, completedDeals, recentDeals] = await Promise.all([
+      prisma.listing.count({
+        where: { referrerId: user.referrerProfile.id, isActive: true },
+      }),
+      prisma.deal.count({
+        where: {
+          referrerId: user.id,
+          status: { in: ["paid", "referral_submitted"] },
+        },
+      }),
+      prisma.deal.count({
+        where: { referrerId: user.id, status: "completed" },
+      }),
+      prisma.deal.findMany({
+        where: { referrerId: user.id },
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        include: {
+          seeker: { select: { fullName: true } },
+        },
+      }),
+    ])
+
+    const totalDeals = completedDeals + inProgressDeals
+    const successRate = totalDeals > 0 ? Math.round((completedDeals / totalDeals) * 100) : 0
+
+    const recentActivity: ActivityItem[] = recentDeals.map((deal) => ({
+      id: deal.id,
+      icon:
+        deal.status === "completed"
+          ? "complete"
+          : deal.status === "paid" || deal.status === "referral_submitted"
+            ? "deal"
+            : "message",
+      description:
+        deal.status === "completed"
+          ? `Referral for ${deal.seeker.fullName ?? "a seeker"} completed`
+          : deal.status === "referral_submitted"
+            ? `You submitted a referral for ${deal.seeker.fullName ?? "a seeker"}`
+            : deal.status === "paid"
+              ? `Payment confirmed for deal with ${deal.seeker.fullName ?? "a seeker"}`
+              : `New deal started with ${deal.seeker.fullName ?? "a seeker"}`,
+      timeAgo: timeAgo(deal.createdAt),
+    }))
+
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-center space-y-3">
-          <h2 className="font-display text-2xl font-bold text-[var(--text-primary)]">
-            Referrer Dashboard
-          </h2>
-          <p className="text-[var(--text-secondary)]">Phase 4 — Coming soon</p>
-        </div>
-      </div>
+      <ReferrerDashboard
+        firstName={firstName}
+        stats={{
+          activeListings,
+          inProgressDeals,
+          completedReferrals: completedDeals,
+          successRate,
+        }}
+        recentActivity={recentActivity}
+      />
     )
   }
 
+  // Seeker dashboard (default for seeker and both)
   if (!user.seekerProfile) {
     redirect("/onboarding/role")
   }
@@ -139,9 +196,6 @@ export default async function DashboardPage() {
             : `New deal started with ${deal.referrer.fullName ?? "a referrer"}`,
     timeAgo: timeAgo(deal.createdAt),
   }))
-
-  const firstName =
-    (user.fullName ?? user.email).trim().split(/\s+/)[0] ?? "there"
 
   return (
     <SeekerDashboard
