@@ -20,7 +20,7 @@ const profileSchema = z.object({
     .optional()
     .refine(
       (val) => !val || val === "" || val.startsWith("https://linkedin.com/in/"),
-      { message: "LinkedIn URL must start with https://linkedin.com/in/" }
+      { message: "LinkedIn URL must start with https://linkedin.com/in/ or https://www.linkedin.com/in/" }
     ),
   location: z.string().optional(),
 })
