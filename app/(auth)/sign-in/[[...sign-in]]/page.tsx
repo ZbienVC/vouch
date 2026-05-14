@@ -55,8 +55,8 @@ export default function SignInPage() {
       </div>
 
       {/* Right panel */}
-      <div className="flex flex-1 items-center justify-center p-8">
-        <div className="auth-card">
+      <div className="flex flex-1 items-center justify-center p-6 min-h-screen">
+        <div className="auth-card w-full">
           <div className="lg:hidden mb-8 text-center">
             <span style={{ fontSize: 18, fontWeight: 600, color: "var(--text-primary)" }}>
               vouch<span style={{ color: "var(--text-accent)" }}>.</span>
