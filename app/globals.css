@@ -378,3 +378,63 @@ code, pre, .mono {
   border-radius: 4px;
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ===== CLERK FORM OVERRIDES ===== */
+/* Force label contrast */
+.cl-formFieldLabel,
+.cl-label,
+[data-clerk] label,
+.cl-internal-b3fm6y {
+  color: #CBD5E1 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+/* Input fields - lighter bg, visible border */
+.cl-formFieldInput,
+.cl-input,
+[data-clerk] input {
+  background: #1A2744 !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  border-radius: 10px !important;
+  color: #F1F5F9 !important;
+  height: 46px !important;
+}
+
+.cl-formFieldInput:focus,
+.cl-input:focus {
+  border-color: rgba(99, 102, 241, 0.60) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
+  outline: none !important;
+}
+
+/* Placeholder */
+.cl-formFieldInput::placeholder { color: #475569 !important; }
+
+/* Social button - Google */
+.cl-socialButtonsBlockButton {
+  background: #1A2744 !important;
+  border: 1px solid rgba(148, 163, 184, 0.18) !important;
+  border-radius: 10px !important;
+  color: #F1F5F9 !important;
+  height: 46px !important;
+}
+
+/* Divider text */
+.cl-dividerText { color: #64748B !important; }
+.cl-dividerLine { background: rgba(148, 163, 184, 0.12) !important; }
+
+/* Footer links */
+.cl-footerActionLink { color: #818CF8 !important; font-weight: 500 !important; }
+.cl-footerActionText { color: #94A3B8 !important; }
+
+/* Submit button */
+.cl-formButtonPrimary {
+  background: linear-gradient(135deg, #6366F1, #4F46E5) !important;
+  border-radius: 50px !important;
+  height: 46px !important;
+}
+
+/* Hide powered by Clerk */
+.cl-internal-wkkub3,
+.cl-branded { display: none !important; }
