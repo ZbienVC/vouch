@@ -55,14 +55,14 @@ export default function SignInPage() {
       </div>
 
       {/* Right panel */}
-      <div className="flex flex-1 items-center justify-center p-6 min-h-screen">
-        <div className="auth-card w-full">
-          <div className="lg:hidden mb-8 text-center">
+      <div className="flex flex-1 items-center justify-center p-6 min-h-screen w-full">
+        <div className="auth-card w-full mx-auto">
+          <div className="lg:hidden mb-6 text-center w-full">
             <span style={{ fontSize: 18, fontWeight: 600, color: "var(--text-primary)" }}>
               vouch<span style={{ color: "var(--text-accent)" }}>.</span>
             </span>
           </div>
-          <div className="mb-4">
+          <div className="mb-4 text-center lg:text-left">
             <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>
               Welcome back
             </h2>
@@ -94,7 +94,8 @@ export default function SignInPage() {
                 dividerText: "text-[#64748B] text-xs",
                 formFieldInput: "bg-[#131E33] border border-[rgba(148,163,184,0.10)] text-[#F1F5F9] rounded-[10px] h-[46px] focus:border-[rgba(99,102,241,0.60)] focus:shadow-[0_0_0_3px_rgba(99,102,241,0.12)]",
                 formFieldLabel: "text-[#94A3B8] text-xs font-medium",
-                footerActionLink: "text-[#6366F1]",
+                footerActionLink: "text-[#818CF8] hover:text-[#A5B4FC] font-medium",
+                footerActionText: "text-[#94A3B8]",
                 identityPreviewText: "text-[#F1F5F9]",
                 rootBox: "w-full",
                 alert: "hidden",
