@@ -438,3 +438,47 @@ code, pre, .mono {
 /* Hide powered by Clerk */
 .cl-internal-wkkub3,
 .cl-branded { display: none !important; }
+/* ===== CLERK INTERNAL CARD FIX ===== */
+/* Remove Clerk's own card background/shadow/border completely */
+.cl-card,
+.cl-rootBox,
+.cl-signIn-root .cl-card,
+.cl-signUp-root .cl-card,
+[data-clerk-component] .cl-card {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Fix Clerk footer black bg */
+.cl-footer,
+.cl-internal-b3fm6y,
+.cl-footerAction,
+.cl-footer .cl-internal-b3fm6y,
+[class*="cl-footer"] {
+  background: transparent !important;
+  border-top: none !important;
+  box-shadow: none !important;
+}
+
+/* Fix any inner wrapper black backgrounds */
+.cl-rootBox > div,
+.cl-card > div {
+  background: transparent !important;
+}
+
+/* Clerk main content area */
+.cl-main,
+.cl-content {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* Powered by Clerk - hide */
+.cl-powered-by-clerk,
+[class*="powered"],
+.cl-internal-wkkub3 {
+  display: none !important;
+}
