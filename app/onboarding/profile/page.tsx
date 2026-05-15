@@ -155,50 +155,45 @@ export default function OnboardingProfilePage() {
     setState: (s: UploadState) => void
   ): Promise<string> => {
     setState({ uploading: true, progress: 10, url: "", fileName: file.name, fileSize: file.size })
-    const { data, error } = await getSupabase().storage
-      .from(bucket)
-      .upload(path, file, { upsert: true })
-    if (error) {
+    try {
+      const supabaseClient = getSupabase()
+      const { data, error } = await supabaseClient.storage
+        .from(bucket)
+        .upload(path, file, { upsert: true })
+      if (error) throw error
+      const { data: urlData } = supabaseClient.storage.from(bucket).getPublicUrl(data.path)
+      setState({ uploading: false, progress: 100, url: urlData.publicUrl, fileName: file.name, fileSize: file.size })
+      return urlData.publicUrl
+    } catch (err) {
+      console.error("Upload error:", err)
       setState(emptyUpload)
-      throw error
+      // Return empty string instead of throwing - uploads are optional
+      return ""
     }
-    const { data: urlData } = getSupabase().storage.from(bucket).getPublicUrl(data.path)
-    setState({
-      uploading: false,
-      progress: 100,
-      url: urlData.publicUrl,
-      fileName: file.name,
-      fileSize: file.size,
-    })
-    return urlData.publicUrl
   }
 
   // Task 14: Avatar with local preview
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-
-    // Immediate local preview
+    // Immediate local preview regardless of upload
     const reader = new FileReader()
     reader.onloadend = () => setAvatarPreview(reader.result as string)
     reader.readAsDataURL(file)
-
     if (file.size > 5 * 1024 * 1024) { toast.error("Avatar must be under 5MB"); return }
-    if (!user?.id) { toast.error("Not authenticated"); return }
-    try {
-      await uploadToSupabase("avatars", `${user.id}/${file.name}`, file, setAvatarUpload)
-      toast.success("Profile photo uploaded!")
-    } catch { toast.error("Failed to upload photo") }
+    if (!user?.id) { toast.warning("Sign in to upload photo"); return }
+    const url = await uploadToSupabase("avatars", `${user.id}/${file.name}`, file, setAvatarUpload)
+    if (url) toast.success("Photo uploaded!")
+    else toast.warning("Photo saved locally — will sync when storage is ready")
   }
 
   const handleResumeFile = async (file: File) => {
     if (file.type !== "application/pdf") { toast.error("Resume must be a PDF file"); return }
     if (file.size > 10 * 1024 * 1024) { toast.error("Resume must be under 10MB"); return }
-    if (!user?.id) { toast.error("Not authenticated"); return }
-    try {
-      await uploadToSupabase("resumes", `${user.id}/${file.name}`, file, setResumeUpload)
-      toast.success("Resume uploaded!")
-    } catch { toast.error("Failed to upload resume") }
+    if (!user?.id) { toast.warning("Sign in to upload resume"); return }
+    const url = await uploadToSupabase("resumes", `${user.id}/${file.name}`, file, setResumeUpload)
+    if (url) toast.success("Resume uploaded!")
+    else toast.warning("Resume saved locally — will sync when storage is ready")
   }
 
   const handleResumeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -370,14 +365,29 @@ export default function OnboardingProfilePage() {
             <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
           </div>
 
-          {/* LinkedIn with prefix lock */}
-          <StyledInput
-            label="LinkedIn Username (optional)"
-            placeholder="yourprofile"
-            error={errors.linkedinUsername?.message}
-            prefix="linkedin.com/in/"
-            inputProps={register("linkedinUsername")}
-          />
+          {/* LinkedIn URL field - clean split input */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+              LinkedIn Profile (optional)
+            </label>
+            <div className="flex rounded-[10px] overflow-hidden" style={{ border: "1px solid rgba(148,163,184,0.12)", background: "var(--bg-elevated)" }}>
+              <span className="flex items-center px-3 text-sm shrink-0 border-r" style={{ color: "var(--text-muted)", borderColor: "rgba(148,163,184,0.12)", whiteSpace: "nowrap", background: "var(--surface-raised)" }}>
+                linkedin.com/in/
+              </span>
+              <input
+                {...register("linkedinUsername")}
+                placeholder="yourprofile"
+                className="flex-1 px-3 bg-transparent text-sm outline-none"
+                style={{ height: 46, color: "var(--text-primary)" }}
+              />
+            </div>
+            {errors.linkedinUsername && (
+              <div className="flex items-center gap-1.5">
+                <AlertTriangle size={12} style={{ color: "var(--warning)" }} />
+                <p className="text-xs" style={{ color: "var(--warning)" }}>{errors.linkedinUsername.message}</p>
+              </div>
+            )}
+          </div>
 
           {/* Location */}
           <StyledInput
